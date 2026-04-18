@@ -6,6 +6,7 @@
 #include <ctype.h>
 
 #include <unistd.h>
+#include <sys/wait.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -108,9 +109,29 @@ int main(void)
     char *cmd = NULL;
     while ((cmd = readline(prompt))) {
         Vec_t *argv = parse(cmd);
-        vec_print(argv);
         if (run_builtin(argv)) {
             printf("Ran builtin command.\n");
+        } else {
+            pid_t pid = fork();
+            switch (pid) {
+            case -1:
+                perror("fork");
+                exit(EXIT_FAILURE);
+
+            case 0:
+                if (execvp(argv->v[0], argv->v)) {
+                    perror("execvp");
+                }
+
+                break;
+
+            /* Parent (shell) process */
+            default:
+                pid_t w = waitpid(pid, NULL, 0);
+                if (w == -1) {
+                    perror("waitpid");
+                }
+            }
         }
 
         free(cmd);
