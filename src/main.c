@@ -109,6 +109,9 @@ int main(void)
     char *cmd = NULL;
     while ((cmd = readline(prompt))) {
         Vec_t *argv = parse(cmd);
+        if (!argv->sz)
+            continue;
+
         if (run_builtin(argv)) {
             printf("Ran builtin command.\n");
         } else {
