@@ -1,4 +1,5 @@
 #include "vec.h"
+#include "cmd_ast.h"
 
 #ifdef HAVE_CONFIG_H
 #   include <config.h>
@@ -15,7 +16,7 @@
 #include <readline/history.h>
 
 extern int yydebug;
-extern int yyparse(void);
+extern int yyparse(ASTNode_t **root);
 
 char *cur_cmd;
 char *cur_ch;
@@ -119,7 +120,12 @@ int main(int argc, const char *argv[])
     while ((cmd = readline(PACKAGE_STRING "$ "))) {
         cur_cmd = cmd;
         cur_ch = cur_cmd;
-        yyparse();
+
+        ASTNode_t *root;
+        yyparse(&root);
+
+        ast_print(root);
+        ast_free(root);
 
         free(cmd);
     }

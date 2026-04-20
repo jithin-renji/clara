@@ -101,7 +101,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_sh_OBJECTS = main.$(OBJEXT) vec.$(OBJEXT) parse.$(OBJEXT)
+am_sh_OBJECTS = main.$(OBJEXT) vec.$(OBJEXT) cmd_ast.$(OBJEXT) \
+	parse.$(OBJEXT)
 sh_OBJECTS = $(am_sh_OBJECTS)
 sh_LDADD = $(LDADD)
 sh_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(sh_LDFLAGS) $(LDFLAGS) -o \
@@ -121,8 +122,8 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/main.Po ./$(DEPDIR)/parse.Po \
-	./$(DEPDIR)/vec.Po
+am__depfiles_remade = ./$(DEPDIR)/cmd_ast.Po ./$(DEPDIR)/main.Po \
+	./$(DEPDIR)/parse.Po ./$(DEPDIR)/vec.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -264,7 +265,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_YFLAGS = -d -Wno-yacc -Wcounterexamples
-sh_SOURCES = main.c vec.c vec.h parse.y
+sh_SOURCES = main.c vec.h vec.c cmd_ast.h cmd_ast.c parse.y
 sh_LDFLAGS = -lreadline
 CLEANFILES = parse.c parse.h
 all: all-am
@@ -356,6 +357,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cmd_ast.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/parse.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vec.Po@am__quote@ # am--include-marker
@@ -513,6 +515,7 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
+	-rm -f ./$(DEPDIR)/cmd_ast.Po
 	-rm -f ./$(DEPDIR)/main.Po
 	-rm -f ./$(DEPDIR)/parse.Po
 	-rm -f ./$(DEPDIR)/vec.Po
@@ -561,6 +564,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
+	-rm -f ./$(DEPDIR)/cmd_ast.Po
 	-rm -f ./$(DEPDIR)/main.Po
 	-rm -f ./$(DEPDIR)/parse.Po
 	-rm -f ./$(DEPDIR)/vec.Po

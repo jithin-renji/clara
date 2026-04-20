@@ -1,6 +1,7 @@
 %{
 
 #include "vec.h"
+#include "cmd_ast.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -12,17 +13,21 @@ extern char *cur_cmd;
 extern char *cur_ch;
 
 int yylex(void);
-void yyerror(char const *);
+void yyerror(ASTNode_t **root, char const *e);
 
 %}
+
+%parse-param { ASTNode_t **root }
 
 %union {
     char *word;
     Vec_t *words;
+    ASTNode_t *ast_root;
 }
 
 %token <word> WORD
 %type <words> simple_command
+%type <ast_root> command_list
 
 %left '|'
 
@@ -42,19 +47,17 @@ pipeline:
     }
     | pipeline '|' simple_command {
         printf("pipeline | simple_command:\n");
-        vec_print($3);
     }
 
 command_list:
     simple_command {
-        printf("simple_command:\n");
-        vec_print($1);
-        vec_free($1);
+        *root = ast_node_create(SIMPLE_COMMAND, $1, NULL, NULL);
+        $$ = *root;
     }
     | command_list ';' simple_command {
-        printf("command_list ; simple_command:\n");
-        vec_print($3);
-        vec_free($3);
+        ASTNode_t *new_command = ast_node_create(SIMPLE_COMMAND, $3, NULL, NULL);
+        $1->right = new_command;
+        $$ = new_command;
     }
     | command_list ';' pipeline
     | command_list ';'
@@ -110,7 +113,7 @@ int yylex(void)
     return *cur_ch++;
 }
 
-void yyerror(char const *e)
+void yyerror(ASTNode_t **root, char const *e)
 {
     fprintf(stderr, "%s\n", e);
 }
