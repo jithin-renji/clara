@@ -1,5 +1,7 @@
 %{
 
+#include "vec.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -14,8 +16,13 @@ void yyerror(char const *);
 
 %}
 
-%define api.value.type {char *}
-%token ARG
+%union {
+    char *word;
+    Vec_t *words;
+}
+
+%token <word> WORD
+%type <words> simple_command
 
 %left '|'
 
@@ -28,24 +35,44 @@ input:
     ;
 
 pipeline:
-    simple_command '|' simple_command
-    | pipeline '|' simple_command
+    simple_command '|' simple_command {
+        printf("simple_command | simple_command:\n");
+        vec_print($1);
+        vec_print($3);
+    }
+    | pipeline '|' simple_command {
+        printf("pipeline | simple_command:\n");
+        vec_print($3);
+    }
 
 command_list:
-    simple_command
-    | command_list ';' simple_command
+    simple_command {
+        printf("simple_command:\n");
+        vec_print($1);
+        vec_free($1);
+    }
+    | command_list ';' simple_command {
+        printf("command_list ; simple_command:\n");
+        vec_print($3);
+        vec_free($3);
+    }
     | command_list ';' pipeline
     | command_list ';'
     ;
 
 simple_command:
-    ARG
-    | simple_command ARG
+    WORD {
+        $$ = vec_create();
+        $$ = vec_append($$, $1);
+    }
+    | simple_command WORD {
+        $$ = vec_append($1, $2);
+    }
     ;
 
 %%
 
-int isreserved(char c)
+static int isreserved(char c)
 {
     switch (c) {
     case '|':
@@ -74,10 +101,10 @@ int yylex(void)
             cur_ch++;
         }
 
-        yylval = strndup(cur_ch - n_char, n_char + 1);
-        yylval[n_char] = '\0';
+        yylval.word = strndup(cur_ch - n_char, n_char + 1);
+        yylval.word[n_char] = '\0';
 
-        return ARG;
+        return WORD;
     }
 
     return *cur_ch++;

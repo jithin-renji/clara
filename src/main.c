@@ -120,8 +120,11 @@ int main(int argc, const char *argv[])
         cur_cmd = cmd;
         cur_ch = cur_cmd;
         yyparse();
+
         free(cmd);
     }
+
+    return 0;
 }
 
 // int main(void)
