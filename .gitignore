@@ -4,6 +4,7 @@ sh
 
 configure~
 config.h
+config.h.in~
 config.status
 config.log
 Makefile
