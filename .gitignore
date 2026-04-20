@@ -10,6 +10,8 @@ config.status
 config.log
 Makefile
 stamp-h1
+parse.c
+parse.h
 
 autom4te.cache/
 .deps/
