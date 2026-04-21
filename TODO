@@ -3,7 +3,7 @@ TODO
 [ ] Builtins
     [x] cd
     [ ] exec
-    [ ] exit
+    [x] exit
     [ ] alias
     [ ] export
 [ ] Quoting (eg. ls "directory with spaces")
