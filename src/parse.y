@@ -36,7 +36,9 @@ void yyerror(ASTNode_t **root, char const *e);
 
 %%
 input:
-    %empty { }
+    %empty {
+        *root = NULL;
+    }
     | command_list {
         *root = $1;
     }

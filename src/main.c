@@ -122,10 +122,10 @@ int main(int argc, const char *argv[])
         cur_cmd = cmd;
         cur_ch = cur_cmd;
 
-        ASTNode_t *root;
-        yyparse(&root);
-
-        eval(root);
+        ASTNode_t *root = NULL;
+        if (yyparse(&root) != 1 && root) {
+            eval(root);
+        }
 
         // ast_print(root);
         ast_free(root);
