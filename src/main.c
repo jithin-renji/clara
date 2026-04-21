@@ -129,6 +129,7 @@ static void run_simple_command(ASTNode_t *cmd)
     case 0:
         if (execvp(cmd->argv->v[0], cmd->argv->v) == -1) {
             perror("execvp");
+            exit(EXIT_FAILURE);
         }
 
         break;
@@ -153,6 +154,12 @@ static void eval(ASTNode_t *root)
     }
 
     switch (root->type) {
+    /* A COMMAND_LIST node will always be above a SIMPLE_COMMAND node.
+     * Since all of it's children have already been executed, there's
+     * nothing to do here. */
+    case COMMAND_LIST:
+        break;
+
     default:
         run_simple_command(root);
     }
@@ -173,7 +180,7 @@ int main(int argc, const char *argv[])
 
         eval(root);
 
-        ast_print(root);
+        // ast_print(root);
         ast_free(root);
 
         free(cmd);

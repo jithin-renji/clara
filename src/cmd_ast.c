@@ -31,6 +31,10 @@ static void ast_print_real(ASTNode_t *root, int depth)
         printf("PIPELINE\n");
         break;
 
+    case COMMAND_LIST:
+        printf("COMMAND LIST\n");
+        break;
+
     default:
         printf("%s\n", root->argv->v[0]);
     }

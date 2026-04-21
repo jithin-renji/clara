@@ -79,22 +79,15 @@ command_list:
         $$ = ast_node_create(SIMPLE_COMMAND, $1, NULL, NULL);
     }
     | command_list ';' simple_command {
-        ASTNode_t *cur = $1;
-        while (cur->right) {
-            cur = cur->right;
-        }
-
-        cur->right = ast_node_create(SIMPLE_COMMAND, $3, NULL, NULL);
-        $$ = $1;
+        $$ = ast_node_create(
+            COMMAND_LIST,
+            NULL,
+            $1,
+            ast_node_create(SIMPLE_COMMAND, $3, NULL, NULL)
+        );
     }
     | command_list ';' pipeline {
-        ASTNode_t *cur = $1;
-        while (cur->right) {
-            cur = cur->right;
-        }
-
-        cur->right = $3;
-        $$ = $1;
+        $$ = ast_node_create(COMMAND_LIST, NULL, $1, $3);
     }
     | command_list ';'
     ;
