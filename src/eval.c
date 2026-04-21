@@ -5,80 +5,10 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-static void run_pipeline(ASTNode_t *root, ASTNode_t *parent)
-{
-    if (root->type != PIPELINE) {
-        fprintf(stderr, "run_pipeline() called for root->type = %d\n", root->type);
-        exit(EXIT_FAILURE);
-    }
+#define NO_PIPE         -1
+#define CREATE_END      -2
 
-    if (root->left->type == PIPELINE) {
-        run_pipeline(root->left, root);
-    }
-
-    int pipefd[2];
-    if (pipe(pipefd) == -1) {
-        perror("pipe");
-        exit(EXIT_FAILURE);
-    }
-
-    pid_t pid = fork();
-    if (pid == -1) {
-        perror("fork");
-        exit(EXIT_FAILURE);
-    }
-
-    if (pid == 0) {
-        if (dup2(pipefd[1], STDOUT_FILENO) == -1) {
-            perror("dup2");
-            exit(EXIT_FAILURE);
-        }
-
-        close(pipefd[0]);
-        close(pipefd[1]);
-
-        ASTNode_t *writer = root->left;
-
-        execvp(writer->argv->v[0], writer->argv->v);
-
-        perror("execvp");
-        exit(EXIT_FAILURE);
-    }
-
-    pid = fork();
-    if (pid == -1) {
-        perror("fork");
-        exit(EXIT_FAILURE);
-    }
-
-    if (pid == 0) {
-        if (dup2(pipefd[0], STDIN_FILENO) == -1) {
-            perror("dup2");
-            exit(EXIT_FAILURE);
-        }
-
-        close(pipefd[0]);
-        close(pipefd[1]);
-
-        ASTNode_t *reader = root->right;
-
-        execvp(reader->argv->v[0], reader->argv->v);
-
-        perror("execvp");
-        exit(EXIT_FAILURE);
-    }
-
-
-    close(pipefd[0]);
-    close(pipefd[1]);
-
-    int status;
-    if (waitpid(pid, &status, 0) == -1) {
-        perror("waitpid");
-    }
-}
-
-static void run_simple_command(ASTNode_t *cmd)
+static void run_simple_command(ASTNode_t *cmd, int read_end, int write_end)
 {
     if (cmd->type != SIMPLE_COMMAND) {
         fprintf(stderr, "run_simple_command() called for cmd->type = %d\n", cmd->type);
@@ -94,6 +24,24 @@ static void run_simple_command(ASTNode_t *cmd)
         break;
 
     case 0:
+        if (read_end != NO_PIPE) {
+            if (dup2(read_end, STDIN_FILENO) == -1) {
+                perror("dup2");
+                exit(EXIT_FAILURE);
+            }
+
+            close(read_end);
+        }
+
+        if (write_end != NO_PIPE) {
+            if (dup2(write_end, STDOUT_FILENO) == -1) {
+                perror("dup2");
+                exit(EXIT_FAILURE);
+            }
+
+            close(write_end);
+        }
+
         if (execvp(cmd->argv->v[0], cmd->argv->v) == -1) {
             perror("execvp");
             exit(EXIT_FAILURE);
@@ -106,6 +54,42 @@ static void run_simple_command(ASTNode_t *cmd)
     }
 }
 
+static void run_pipeline(ASTNode_t *root, ASTNode_t *parent, int next_write)
+{
+    if (root->type != PIPELINE) {
+        fprintf(stderr, "run_pipeline() called for root->type = %d\n", root->type);
+        exit(EXIT_FAILURE);
+    }
+
+    if (root->left->type == SIMPLE_COMMAND && root->right->type == SIMPLE_COMMAND) {
+        int pfd[2];
+        if (pipe(pfd) == -1) {
+            perror("pipe");
+        }
+
+        run_simple_command(root->left, NO_PIPE, pfd[1]);
+        close(pfd[1]);
+
+        run_simple_command(root->right, pfd[0], next_write);
+        close(pfd[0]);
+    } else if (root->left->type == PIPELINE) {
+        int next_pfd[2];
+        if (pipe(next_pfd) == -1) {
+            perror("pipe");
+        }
+
+        run_pipeline(root->left, root, next_pfd[1]);
+        close(next_pfd[1]);
+        if (parent) {
+            run_simple_command(root->right, next_pfd[0], next_write);
+        } else {
+            run_simple_command(root->right, next_pfd[0], NO_PIPE);
+        }
+
+        close(next_pfd[0]);
+    }
+}
+
 void eval(ASTNode_t *root)
 {
     if (!root) {
@@ -113,7 +97,7 @@ void eval(ASTNode_t *root)
     }
 
     if (root->type == PIPELINE) {
-        run_pipeline(root, NULL);
+        run_pipeline(root, NULL, NO_PIPE);
         return;
     }
 
@@ -129,11 +113,11 @@ void eval(ASTNode_t *root)
     /* A COMMAND_LIST node will always be above a SIMPLE_COMMAND node.
      * Since all of it's children have already been executed, there's
      * nothing to do here. */
-    case PIPELINE:
     case COMMAND_LIST:
+    case PIPELINE:
         break;
 
     default:
-        run_simple_command(root);
+        run_simple_command(root, NO_PIPE, NO_PIPE);
     }
 }
