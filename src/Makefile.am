@@ -3,5 +3,6 @@ AM_YFLAGS = -d -Wno-yacc -Wcounterexamples
 bin_PROGRAMS = sh
 sh_SOURCES = main.c vec.h vec.c cmd_ast.h cmd_ast.c eval.h eval.c parse.y
 sh_LDFLAGS = -lreadline
+sh_CFLAGS = -Wall
 
 CLEANFILES = parse.c parse.h

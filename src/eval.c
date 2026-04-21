@@ -7,6 +7,8 @@
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <errno.h>
 
 #include <unistd.h>
@@ -16,11 +18,42 @@
 #define READ_END        0
 #define WRITE_END       1
 
+static int run_builtin(ASTNode_t *cmd)
+{
+    if (cmd->type != SIMPLE_COMMAND) {
+        fprintf(stderr, "run_builtin() called for cmd->type = %d\n", cmd->type);
+        exit(EXIT_FAILURE);
+    }
+
+    char **argv = cmd->argv->v;
+    if (strcmp(argv[0], "cd") == 0) {
+        if (cmd->argv->sz == 1) {
+            if (chdir(getenv("HOME")) == -1) {
+                perror("cd");
+            }
+        } else if (cmd->argv->sz == 2) {
+            if (chdir(argv[1]) == -1) {
+                perror("cd");
+            }
+        } else {
+            fprintf(stderr, "cd: too many arguments\n");
+        }
+    } else {
+        return -1;
+    }
+
+    return 0;
+}
+
 static void run_simple_command(ASTNode_t *cmd, int read_end, int write_end)
 {
     if (cmd->type != SIMPLE_COMMAND) {
         fprintf(stderr, "run_simple_command() called for cmd->type = %d\n", cmd->type);
-        abort();
+        exit(EXIT_FAILURE);
+    }
+
+    if (run_builtin(cmd) == 0) {
+        return;
     }
 
     pid_t pid = fork();
@@ -63,6 +96,9 @@ static void run_simple_command(ASTNode_t *cmd, int read_end, int write_end)
 
     default:
         w = waitpid(pid, &wstatus, 0);
+        if (w == -1) {
+            perror("waitpid");
+        }
     }
 }
 

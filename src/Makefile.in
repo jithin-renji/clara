@@ -101,11 +101,11 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_sh_OBJECTS = main.$(OBJEXT) vec.$(OBJEXT) cmd_ast.$(OBJEXT) \
-	eval.$(OBJEXT) parse.$(OBJEXT)
+am_sh_OBJECTS = sh-main.$(OBJEXT) sh-vec.$(OBJEXT) \
+	sh-cmd_ast.$(OBJEXT) sh-eval.$(OBJEXT) sh-parse.$(OBJEXT)
 sh_OBJECTS = $(am_sh_OBJECTS)
 sh_LDADD = $(LDADD)
-sh_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(sh_LDFLAGS) $(LDFLAGS) -o \
+sh_LINK = $(CCLD) $(sh_CFLAGS) $(CFLAGS) $(sh_LDFLAGS) $(LDFLAGS) -o \
 	$@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -122,9 +122,14 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/cmd_ast.Po ./$(DEPDIR)/eval.Po \
-	./$(DEPDIR)/main.Po ./$(DEPDIR)/parse.Po ./$(DEPDIR)/vec.Po
+am__depfiles_remade = ./$(DEPDIR)/sh-cmd_ast.Po ./$(DEPDIR)/sh-eval.Po \
+	./$(DEPDIR)/sh-main.Po ./$(DEPDIR)/sh-parse.Po \
+	./$(DEPDIR)/sh-vec.Po
 am__mv = mv -f
+AM_V_lt = $(am__v_lt_@AM_V@)
+am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+am__v_lt_0 = --silent
+am__v_lt_1 = 
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 AM_V_CC = $(am__v_CC_@AM_V@)
@@ -267,6 +272,7 @@ top_srcdir = @top_srcdir@
 AM_YFLAGS = -d -Wno-yacc -Wcounterexamples
 sh_SOURCES = main.c vec.h vec.c cmd_ast.h cmd_ast.c eval.h eval.c parse.y
 sh_LDFLAGS = -lreadline
+sh_CFLAGS = -Wall
 CLEANFILES = parse.c parse.h
 all: all-am
 
@@ -357,11 +363,11 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cmd_ast.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eval.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/parse.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vec.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sh-cmd_ast.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sh-eval.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sh-main.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sh-parse.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sh-vec.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -382,6 +388,76 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+sh-main.o: main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-main.o -MD -MP -MF $(DEPDIR)/sh-main.Tpo -c -o sh-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-main.Tpo $(DEPDIR)/sh-main.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='main.c' object='sh-main.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
+
+sh-main.obj: main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-main.obj -MD -MP -MF $(DEPDIR)/sh-main.Tpo -c -o sh-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-main.Tpo $(DEPDIR)/sh-main.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='main.c' object='sh-main.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
+
+sh-vec.o: vec.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-vec.o -MD -MP -MF $(DEPDIR)/sh-vec.Tpo -c -o sh-vec.o `test -f 'vec.c' || echo '$(srcdir)/'`vec.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-vec.Tpo $(DEPDIR)/sh-vec.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vec.c' object='sh-vec.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-vec.o `test -f 'vec.c' || echo '$(srcdir)/'`vec.c
+
+sh-vec.obj: vec.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-vec.obj -MD -MP -MF $(DEPDIR)/sh-vec.Tpo -c -o sh-vec.obj `if test -f 'vec.c'; then $(CYGPATH_W) 'vec.c'; else $(CYGPATH_W) '$(srcdir)/vec.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-vec.Tpo $(DEPDIR)/sh-vec.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vec.c' object='sh-vec.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-vec.obj `if test -f 'vec.c'; then $(CYGPATH_W) 'vec.c'; else $(CYGPATH_W) '$(srcdir)/vec.c'; fi`
+
+sh-cmd_ast.o: cmd_ast.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-cmd_ast.o -MD -MP -MF $(DEPDIR)/sh-cmd_ast.Tpo -c -o sh-cmd_ast.o `test -f 'cmd_ast.c' || echo '$(srcdir)/'`cmd_ast.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-cmd_ast.Tpo $(DEPDIR)/sh-cmd_ast.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='cmd_ast.c' object='sh-cmd_ast.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-cmd_ast.o `test -f 'cmd_ast.c' || echo '$(srcdir)/'`cmd_ast.c
+
+sh-cmd_ast.obj: cmd_ast.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-cmd_ast.obj -MD -MP -MF $(DEPDIR)/sh-cmd_ast.Tpo -c -o sh-cmd_ast.obj `if test -f 'cmd_ast.c'; then $(CYGPATH_W) 'cmd_ast.c'; else $(CYGPATH_W) '$(srcdir)/cmd_ast.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-cmd_ast.Tpo $(DEPDIR)/sh-cmd_ast.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='cmd_ast.c' object='sh-cmd_ast.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-cmd_ast.obj `if test -f 'cmd_ast.c'; then $(CYGPATH_W) 'cmd_ast.c'; else $(CYGPATH_W) '$(srcdir)/cmd_ast.c'; fi`
+
+sh-eval.o: eval.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-eval.o -MD -MP -MF $(DEPDIR)/sh-eval.Tpo -c -o sh-eval.o `test -f 'eval.c' || echo '$(srcdir)/'`eval.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-eval.Tpo $(DEPDIR)/sh-eval.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='eval.c' object='sh-eval.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-eval.o `test -f 'eval.c' || echo '$(srcdir)/'`eval.c
+
+sh-eval.obj: eval.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-eval.obj -MD -MP -MF $(DEPDIR)/sh-eval.Tpo -c -o sh-eval.obj `if test -f 'eval.c'; then $(CYGPATH_W) 'eval.c'; else $(CYGPATH_W) '$(srcdir)/eval.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-eval.Tpo $(DEPDIR)/sh-eval.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='eval.c' object='sh-eval.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-eval.obj `if test -f 'eval.c'; then $(CYGPATH_W) 'eval.c'; else $(CYGPATH_W) '$(srcdir)/eval.c'; fi`
+
+sh-parse.o: parse.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-parse.o -MD -MP -MF $(DEPDIR)/sh-parse.Tpo -c -o sh-parse.o `test -f 'parse.c' || echo '$(srcdir)/'`parse.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-parse.Tpo $(DEPDIR)/sh-parse.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='parse.c' object='sh-parse.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-parse.o `test -f 'parse.c' || echo '$(srcdir)/'`parse.c
+
+sh-parse.obj: parse.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-parse.obj -MD -MP -MF $(DEPDIR)/sh-parse.Tpo -c -o sh-parse.obj `if test -f 'parse.c'; then $(CYGPATH_W) 'parse.c'; else $(CYGPATH_W) '$(srcdir)/parse.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-parse.Tpo $(DEPDIR)/sh-parse.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='parse.c' object='sh-parse.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-parse.obj `if test -f 'parse.c'; then $(CYGPATH_W) 'parse.c'; else $(CYGPATH_W) '$(srcdir)/parse.c'; fi`
 
 .y.c:
 	$(AM_V_YACC)$(am__skipyacc) $(SHELL) $(YLWRAP) $< y.tab.c $@ y.tab.h `echo $@ | $(am__yacc_c2h)` y.output $*.output -- $(YACCCOMPILE)
@@ -516,11 +592,11 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-	-rm -f ./$(DEPDIR)/cmd_ast.Po
-	-rm -f ./$(DEPDIR)/eval.Po
-	-rm -f ./$(DEPDIR)/main.Po
-	-rm -f ./$(DEPDIR)/parse.Po
-	-rm -f ./$(DEPDIR)/vec.Po
+	-rm -f ./$(DEPDIR)/sh-cmd_ast.Po
+	-rm -f ./$(DEPDIR)/sh-eval.Po
+	-rm -f ./$(DEPDIR)/sh-main.Po
+	-rm -f ./$(DEPDIR)/sh-parse.Po
+	-rm -f ./$(DEPDIR)/sh-vec.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -566,11 +642,11 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -f ./$(DEPDIR)/cmd_ast.Po
-	-rm -f ./$(DEPDIR)/eval.Po
-	-rm -f ./$(DEPDIR)/main.Po
-	-rm -f ./$(DEPDIR)/parse.Po
-	-rm -f ./$(DEPDIR)/vec.Po
+	-rm -f ./$(DEPDIR)/sh-cmd_ast.Po
+	-rm -f ./$(DEPDIR)/sh-eval.Po
+	-rm -f ./$(DEPDIR)/sh-main.Po
+	-rm -f ./$(DEPDIR)/sh-parse.Po
+	-rm -f ./$(DEPDIR)/sh-vec.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

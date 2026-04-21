@@ -1,7 +1,7 @@
 TODO
 
 [ ] Builtins
-    [ ] cd
+    [x] cd
     [ ] exec
     [ ] exit
     [ ] alias
