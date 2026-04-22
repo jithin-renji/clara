@@ -25,12 +25,30 @@ extern int yyparse(ASTNode_t **root);
 char *cur_cmd;
 char *cur_ch;
 
-void sigint_handler(int s) { }
+void ignore_interactive_signals(void)
+{
+    rl_catch_signals = 0;
+    signal(SIGINT, SIG_IGN);
+    signal(SIGQUIT, SIG_IGN);
+    signal(SIGTSTP, SIG_IGN);
+    signal(SIGTTIN, SIG_IGN);
+    signal(SIGTTOU, SIG_IGN);
+    signal(SIGCHLD, SIG_IGN);
+}
 
 int main(int argc, const char *argv[])
 {
-    rl_catch_signals = 0;
-    signal(SIGINT, sigint_handler);
+    ignore_interactive_signals();
+    pid_t sh_pgid = getpid();
+    if (setpgid(sh_pgid, sh_pgid) == -1) {
+        perror("Unable to create shell process group:");
+        exit(EXIT_FAILURE);
+    }
+
+    if (tcsetpgrp(STDIN_FILENO, sh_pgid) == -1) {
+        perror("tcsetpgrp:");
+    }
+
     if (argc == 2 && strcmp(argv[1], "--debug") == 0)
         yydebug = 1;
 

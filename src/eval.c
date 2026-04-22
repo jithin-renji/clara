@@ -13,6 +13,7 @@
 #include <errno.h>
 
 #include <unistd.h>
+#include <signal.h>
 #include <sys/wait.h>
 
 #define NO_PIPE         -1
@@ -57,6 +58,15 @@ static void run_simple_command(ASTNode_t *cmd, int read_end, int write_end)
         break;
 
     case 0:
+        setpgid(getpid(), getpid());
+        tcsetpgrp(STDIN_FILENO, getpid());
+
+        signal(SIGINT,  SIG_DFL);
+        signal(SIGQUIT, SIG_DFL);
+        signal(SIGTSTP, SIG_DFL);
+        signal(SIGTTIN, SIG_DFL);
+        signal(SIGTTOU, SIG_DFL);
+        signal(SIGCHLD, SIG_DFL);
         if (read_end != NO_PIPE) {
             if (dup2(read_end, STDIN_FILENO) == -1) {
                 perror("dup2");
@@ -87,10 +97,14 @@ static void run_simple_command(ASTNode_t *cmd, int read_end, int write_end)
         break;
 
     default:
+        setpgid(pid, pid);
         w = waitpid(pid, &wstatus, 0);
-        if (w == -1) {
+        if (w == -1 && errno != ECHILD) {
             perror("waitpid");
         }
+        /* TODO: Detect stopped children */
+
+        tcsetpgrp(STDIN_FILENO, getpgrp());
     }
 }
 
