@@ -24,6 +24,7 @@ void yyerror(ASTNode_t **root, char const *e);
     ASTNode_t *ast_root;
 }
 
+%token ERROR
 %token <word> WORD
 %type <words> simple_command
 %type <ast_root> command_list
@@ -92,6 +93,7 @@ simple_command:
         $$ = vec_create();
         $$ = vec_append($$, $1);
     }
+    | ERROR { YYABORT; }
     | simple_command WORD {
         $$ = vec_append($1, $2);
     }
@@ -121,14 +123,37 @@ int yylex(void)
         cur_ch++;
     }
 
+    /* Is there a better way to deal with quoting? */
+    int quoted = 0;
+    int quote_ended = 0;
     if (*cur_ch && !isspace(*cur_ch) && !isreserved(*cur_ch)) {
-        size_t n_char = 0;
-        while (*cur_ch && !isspace(*cur_ch) && !isreserved(*cur_ch)) {
-            n_char++;
+        if (*cur_ch == '"') {
             cur_ch++;
+            quoted = 1;
         }
 
-        yylval.word = strndup(cur_ch - n_char, n_char + 1);
+        size_t n_char = 0;
+        while (*cur_ch && (quoted || (!isspace(*cur_ch) && !isreserved(*cur_ch)))) {
+            if (*cur_ch == '"') {
+                quoted = 0;
+                quote_ended = 1;
+                cur_ch++;
+                break;
+            }
+
+            cur_ch++;
+            n_char++;
+        }
+
+        if (quoted && !quote_ended) {
+            return ERROR;
+        }
+
+        if (quote_ended) {
+            yylval.word = strndup(cur_ch - n_char - 1, n_char);
+        } else {
+            yylval.word = strndup(cur_ch - n_char, n_char + 1);
+        }
         yylval.word[n_char] = '\0';
 
         return WORD;
