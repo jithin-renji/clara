@@ -15,6 +15,7 @@
 
 #include <unistd.h>
 #include <sys/wait.h>
+#include <signal.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -24,8 +25,12 @@ extern int yyparse(ASTNode_t **root);
 char *cur_cmd;
 char *cur_ch;
 
+void sigint_handler(int s) { }
+
 int main(int argc, const char *argv[])
 {
+    rl_catch_signals = 0;
+    signal(SIGINT, sigint_handler);
     if (argc == 2 && strcmp(argv[1], "--debug") == 0)
         yydebug = 1;
 
