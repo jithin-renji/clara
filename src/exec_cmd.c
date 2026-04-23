@@ -5,12 +5,16 @@
 #endif
 
 #include <stdio.h>
+#include <string.h>
 #include <errno.h>
 #include <stdlib.h>
 
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
+
+Job_t *jobs = NULL;
+static size_t next_job_id = 0;
 
 Pipeline_t *pipeline_create(void)
 {
@@ -110,6 +114,19 @@ void proc_exec(Proc_t *proc, pid_t pgrp, int read_fd, int write_fd)
     exit(EXIT_FAILURE);
 }
 
+static void job_add(Job_t *job)
+{
+    if (!jobs) {
+        jobs = job;
+    } else {
+        /* Add job to the beginning of list */
+        job->next = jobs;
+        jobs = job;
+    }
+
+    job->cmdline = strdup(job->pipeline->argv->v[0]);
+}
+
 void job_create(Pipeline_t *pipeline, int is_foreground)
 {
     int read_fd = STDIN_FILENO;
@@ -162,14 +179,39 @@ void job_create(Pipeline_t *pipeline, int is_foreground)
         read_fd = pfd[0];
     }
 
+
     int wstatus;
     if (waitpid(-pgrp, &wstatus, WUNTRACED) == -1 && errno != ECHILD) {
         perror("waitpid");
     }
 
     if (WIFSTOPPED(wstatus)) {
-        fprintf(stderr, "Stopped.\nRun 'bg' to send this job to the background or 'fg' to bring it back to the foreground.\n");
+        Job_t *job = malloc(sizeof(Job_t));
+        job->id = next_job_id;
+        job->pipeline = pipeline;
+        job->pgrp = pgrp;
+        job->is_foreground = 1;
+        job->is_running = 1;
+        job->next = NULL;
+
+        job_add(job);
+        fprintf(stderr, "[%ld] Stopped.\n"
+                "Run 'bg' to send this job to the background or 'fg' to bring it back to the foreground.\n", job->id);
+
+        next_job_id++;
     }
 
     tcsetpgrp(STDIN_FILENO, getpgrp());
+}
+
+void jobs_free(void)
+{
+    Job_t *cur = jobs;
+    while (cur) {
+        free(cur->cmdline);
+        pipeline_free(cur->pipeline);
+        cur = cur->next;
+
+        free(cur);
+    }
 }

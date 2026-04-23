@@ -1,6 +1,7 @@
 #include "vec.h"
 #include "cmd_ast.h"
 #include "eval.h"
+#include "exec_cmd.h"
 
 #ifdef HAVE_CONFIG_H
 #   include <config.h>
@@ -72,6 +73,8 @@ int main(int argc, const char *argv[])
 
         free(cmd);
     }
+
+    jobs_free();
 
     return 0;
 }

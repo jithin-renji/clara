@@ -80,7 +80,6 @@ void eval(ASTNode_t *root)
         eval_pipeline(root, pipeline);
         job_create(pipeline, 1);
 
-        pipeline_free(pipeline);
         return;
     }
 
@@ -92,6 +91,7 @@ void eval(ASTNode_t *root)
         eval(root->right);
     }
 
+    Proc_t * proc;
     switch (root->type) {
     /* A COMMAND_LIST node will always be above a SIMPLE_COMMAND node.
      * Since all of it's children have already been executed, there's
@@ -101,10 +101,9 @@ void eval(ASTNode_t *root)
         break;
 
     default:
-        Proc_t *proc = eval_simple_command(root);
+        proc = eval_simple_command(root);
         if (proc) {
             job_create(proc, 1);
-            pipeline_free(proc);
         }
     }
 }

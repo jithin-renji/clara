@@ -1,15 +1,18 @@
 #include "builtins.h"
+#include "exec_cmd.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
 
-static int change_working_dir(Vec_t *args);
-static int exit_shell(Vec_t *args);
+static int change_working_dir(Vec_t *argv);
+static int show_job_list(Vec_t *argv);
+static int exit_shell(Vec_t *argv);
 
 Builtin_t builtins[NUM_BUILTINS + 1] = {
     { "cd", change_working_dir },
+    { "jobs", show_job_list },
     { "exit", exit_shell },
     { "", NULL }
 };
@@ -25,17 +28,17 @@ Builtin_t get_builtin(char *name)
     return builtins[NUM_BUILTINS];
 }
 
-static int change_working_dir(Vec_t *args)
+static int change_working_dir(Vec_t *argv)
 {
-    if (args->sz == 1) {
+    if (argv->sz == 1) {
         if (chdir(getenv("HOME")) == -1) {
             perror("cd");
             return -1;
         }
-    } else if (args->sz == 2) {
-        if (chdir(args->v[1]) == -1) {
+    } else if (argv->sz == 2) {
+        if (chdir(argv->v[1]) == -1) {
             if (errno == ENOENT) {
-                fprintf(stderr, "cd: %s: No such file or directory\n", args->v[1]);
+                fprintf(stderr, "cd: %s: No such file or directory\n", argv->v[1]);
             } else {
                 perror("cd");
             }
@@ -50,7 +53,18 @@ static int change_working_dir(Vec_t *args)
     return 0;
 }
 
-static int exit_shell(Vec_t *args)
+static int show_job_list(Vec_t *argv)
+{
+    Job_t *cur = jobs;
+    while (cur) {
+        printf("[%ld] %s\n", cur->id, cur->cmdline);
+        cur = cur->next;
+    }
+
+    return 0;
+}
+
+static int exit_shell(Vec_t *argv)
 {
     /* TODO: Return status based on argument */
     exit(EXIT_SUCCESS);

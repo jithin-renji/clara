@@ -112,6 +112,7 @@ static int isreserved(char c)
         return 1;
 
     default:
+        break;
     }
 
     return 0;

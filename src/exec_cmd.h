@@ -15,11 +15,15 @@ typedef Proc_t Pipeline_t;
 typedef struct Job
 {
     size_t id;
-    Pipeline_t *pipeline; /* This will probably have to change later */
+    char *cmdline;          /* Future */
+    Pipeline_t *pipeline;   /* This will probably have to change later */
+    pid_t pgrp;
     int is_foreground;
     int is_running;
     struct Job *next;
 } Job_t;
+
+extern Job_t *jobs;
 
 Pipeline_t *pipeline_create(void);
 void pipeline_append(Pipeline_t *pipeline, Proc_t *proc);
@@ -27,5 +31,6 @@ Proc_t *proc_create(Vec_t *argv);
 void pipeline_free(Pipeline_t *pipeline);
 
 void job_create(Pipeline_t *pipeline, int foreground);
+void jobs_free(void);
 
 #endif
