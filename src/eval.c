@@ -1,6 +1,6 @@
 #include "eval.h"
 #include "builtins.h"
-#include "exec_cmd.h"
+#include "jobs.h"
 
 #ifdef HAVE_CONFIG_H
 #   include <config.h>

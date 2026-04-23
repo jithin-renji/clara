@@ -1,15 +1,7 @@
-#ifndef EXEC_CMD_H
-#define EXEC_CMD_H
+#ifndef JOBS_H
+#define JOBS_H
 
-#include "vec.h"
-
-typedef struct Proc
-{
-    Vec_t *argv;
-    struct Proc *next;
-} Proc_t;
-
-typedef Proc_t Pipeline_t;
+#include "proc.h"
 
 /* TODO: Implement job control */
 typedef struct Job
@@ -25,12 +17,7 @@ typedef struct Job
 
 extern Job_t *jobs;
 
-Pipeline_t *pipeline_create(void);
-void pipeline_append(Pipeline_t *pipeline, Proc_t *proc);
-Proc_t *proc_create(Vec_t *argv);
-void pipeline_free(Pipeline_t *pipeline);
-
 void job_create(Pipeline_t *pipeline, int foreground);
 void jobs_free(void);
 
-#endif
+#endif  /* JOBS_H */

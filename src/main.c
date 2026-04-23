@@ -1,7 +1,7 @@
 #include "vec.h"
 #include "cmd_ast.h"
 #include "eval.h"
-#include "exec_cmd.h"
+#include "jobs.h"
 
 #ifdef HAVE_CONFIG_H
 #   include <config.h>
