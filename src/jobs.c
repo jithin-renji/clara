@@ -43,21 +43,32 @@ static void job_remove(Job_t *job)
 void job_wait(Job_t *job)
 {
     int wstatus;
-    pid_t pid = waitpid(-job->pgrp, &wstatus, WUNTRACED);
+    pid_t pid;
+    while ((pid = waitpid(-job->pgrp, &wstatus, WUNTRACED)) > 0) {
+        if (WIFSTOPPED(wstatus)) {
+            printf("\n[%ld] Stopped\n"
+                   "Run 'bg' to send this job to the background.\n"
+                   "Run 'fg' to bring this job back to the foreground.\n", job->id);
+            break;
+        } else if (WIFSIGNALED(wstatus)) {
+            printf("\n[%ld] Terminated (signal %d)\n", job->id, WTERMSIG(wstatus));
+            job_remove(job);
+            break;
+        } else if (WIFEXITED(wstatus)) {
+            /* This removes the job as soon as one of
+             * the processes in this job exits.
+             *
+             * TODO: Remove job only after all processes have exited */
+            job_remove(job);
+        }
+    }
+
     if (pid == -1) {
         if (errno != ECHILD) {
             perror("waitpid");
         }
 
         job_remove(job);
-    } else {
-        if (WIFSTOPPED(wstatus)) {
-            printf("\n[%ld] Stopped\n"
-                   "Run 'bg' to send this job to the background.\n"
-                   "Run 'fg' to bring this job back to the foreground.\n", job->id);
-        } else if (WIFEXITED(wstatus)) {
-            job_remove(job);
-        }
     }
 
     tcsetpgrp(STDIN_FILENO, getpgrp());

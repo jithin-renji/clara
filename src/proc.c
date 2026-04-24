@@ -66,7 +66,6 @@ static void reset_signals(void)
     signal(SIGTSTP, SIG_DFL);
     signal(SIGTTIN, SIG_DFL);
     signal(SIGTTOU, SIG_DFL);
-    signal(SIGCHLD, SIG_DFL);
 }
 
 void proc_exec(Proc_t *proc, pid_t pgrp, int read_fd, int write_fd)
