@@ -60,7 +60,7 @@ static int show_job_list(Vec_t *argv)
 {
     Job_t *cur = jobs;
     while (cur) {
-        printf("[%ld] %s\n", cur->id, cur->cmdline);
+        printf("[%ld] %s (%s)\n", cur->id, cur->cmdline, cur->is_running ? "running" : "stopped");
         cur = cur->next;
     }
 
