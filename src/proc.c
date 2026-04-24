@@ -18,6 +18,8 @@ Pipeline_t *pipeline_create(void)
 {
     Pipeline_t *pipeline = malloc(sizeof(Pipeline_t));
     pipeline->argv = NULL;
+    pipeline->pid = -1;
+    pipeline->completed = 0;
     pipeline->next = NULL;
 
     return pipeline;
@@ -27,6 +29,8 @@ Proc_t *proc_create(Vec_t *argv)
 {
     Proc_t *proc = pipeline_create();
     proc->argv = argv;
+    proc->pid = -1;
+    proc->completed = 0;
 
     return proc;
 }

@@ -83,6 +83,25 @@ void job_wait(Job_t *job)
     tcsetpgrp(STDIN_FILENO, getpgrp());
 }
 
+Job_t *job_find_by_pid(pid_t pid)
+{
+    Job_t *cur = jobs;
+    while (cur) {
+        Proc_t *cur_proc = cur->pipeline;
+        while (cur_proc) {
+            if (cur_proc->pid == pid) {
+                return cur;
+            }
+
+            cur_proc = cur_proc->next;
+        }
+
+        cur = cur->next;
+    }
+
+    return NULL;
+}
+
 void reap_completed_bg_procs(int s)
 {
     pid_t pid;
@@ -91,17 +110,33 @@ void reap_completed_bg_procs(int s)
     /* Here, we're only reaping a single process at a time. No concept
      * of jobs. Should find a way to remove job when all procs in the
      * job have been reaped. */
+    Job_t *job = NULL;
     while ((pid = waitpid(-1, &wstatus, WNOHANG)) > 0) {
+        /* TODO: Mark corresponding Proc_t as completed */
+        job = job_find_by_pid(pid);
+
         if (WIFEXITED(wstatus)) {
             /* TODO: Update status of job, notify user */
-            fprintf(stderr, "\n[(pid) %d] Exited\n", pid);
+            // fprintf(stderr, "\n[(pid) %d] Exited\n", pid);
+
             break;
         } else if (WIFSIGNALED(wstatus)) {
-            fprintf(stderr, "\n[(pid) %d] Terminated (signal %d)\n",
-                pid, WTERMSIG(wstatus));
+            int s = WTERMSIG(wstatus);
+            if (job) {
+                fprintf(stderr, "\n[%ld] Terminated (signal %d)\n", job->id, s);
+            } else {
+                /* If we're here, something's wrong */
+                fprintf(stderr, "\n[(pid) %d] Terminated (signal %d)\n", pid, s);
+            }
+
             break;
         }
     }
+
+    if (pid != -1 && job) {
+        job_remove(job);
+    }
+
 }
 
 int job_fg(Job_t *job)
@@ -175,6 +210,7 @@ void job_create(Pipeline_t *pipeline, int is_foreground)
             }
 
             setpgid(pid, pgrp);
+            proc->pid = pid;
         }
 
         if (read_fd != STDIN_FILENO) {

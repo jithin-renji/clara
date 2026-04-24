@@ -6,6 +6,8 @@
 typedef struct Proc
 {
     Vec_t *argv;
+    pid_t pid;
+    int completed;
     struct Proc *next;
 } Proc_t;
 
