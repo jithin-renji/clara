@@ -88,7 +88,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = sh$(EXEEXT)
+bin_PROGRAMS = clara$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -101,13 +101,14 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_sh_OBJECTS = sh-main.$(OBJEXT) sh-vec.$(OBJEXT) \
-	sh-cmd_ast.$(OBJEXT) sh-eval.$(OBJEXT) sh-builtins.$(OBJEXT) \
-	sh-proc.$(OBJEXT) sh-jobs.$(OBJEXT) sh-parse.$(OBJEXT)
-sh_OBJECTS = $(am_sh_OBJECTS)
-sh_LDADD = $(LDADD)
-sh_LINK = $(CCLD) $(sh_CFLAGS) $(CFLAGS) $(sh_LDFLAGS) $(LDFLAGS) -o \
-	$@
+am_clara_OBJECTS = clara-main.$(OBJEXT) clara-vec.$(OBJEXT) \
+	clara-cmd_ast.$(OBJEXT) clara-eval.$(OBJEXT) \
+	clara-builtins.$(OBJEXT) clara-proc.$(OBJEXT) \
+	clara-jobs.$(OBJEXT) clara-parse.$(OBJEXT)
+clara_OBJECTS = $(am_clara_OBJECTS)
+clara_LDADD = $(LDADD)
+clara_LINK = $(CCLD) $(clara_CFLAGS) $(CFLAGS) $(clara_LDFLAGS) \
+	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -123,11 +124,11 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/sh-builtins.Po \
-	./$(DEPDIR)/sh-cmd_ast.Po ./$(DEPDIR)/sh-eval.Po \
-	./$(DEPDIR)/sh-jobs.Po ./$(DEPDIR)/sh-main.Po \
-	./$(DEPDIR)/sh-parse.Po ./$(DEPDIR)/sh-proc.Po \
-	./$(DEPDIR)/sh-vec.Po
+am__depfiles_remade = ./$(DEPDIR)/clara-builtins.Po \
+	./$(DEPDIR)/clara-cmd_ast.Po ./$(DEPDIR)/clara-eval.Po \
+	./$(DEPDIR)/clara-jobs.Po ./$(DEPDIR)/clara-main.Po \
+	./$(DEPDIR)/clara-parse.Po ./$(DEPDIR)/clara-proc.Po \
+	./$(DEPDIR)/clara-vec.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -153,8 +154,8 @@ am__v_YACC_ = $(am__v_YACC_@AM_DEFAULT_V@)
 am__v_YACC_0 = @echo "  YACC    " $@;
 am__v_YACC_1 = 
 YLWRAP = $(top_srcdir)/ylwrap
-SOURCES = $(sh_SOURCES)
-DIST_SOURCES = $(sh_SOURCES)
+SOURCES = $(clara_SOURCES)
+DIST_SOURCES = $(clara_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -273,11 +274,11 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_YFLAGS = -d -Wno-yacc -Wcounterexamples
-sh_SOURCES = main.c vec.h vec.c cmd_ast.h cmd_ast.c eval.h eval.c builtins.h builtins.c \
-			 proc.h proc.c jobs.h jobs.c parse.y
+clara_SOURCES = main.c vec.h vec.c cmd_ast.h cmd_ast.c eval.h eval.c builtins.h builtins.c \
+				proc.h proc.c jobs.h jobs.c parse.y
 
-sh_LDFLAGS = -lreadline
-sh_CFLAGS = -Wall
+clara_LDFLAGS = -lreadline
+clara_CFLAGS = -Wall
 CLEANFILES = parse.c parse.h
 all: all-am
 
@@ -358,9 +359,9 @@ parse.h: parse.c
 	@if test ! -f $@; then rm -f parse.c; else :; fi
 	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) parse.c; else :; fi
 
-sh$(EXEEXT): $(sh_OBJECTS) $(sh_DEPENDENCIES) $(EXTRA_sh_DEPENDENCIES) 
-	@rm -f sh$(EXEEXT)
-	$(AM_V_CCLD)$(sh_LINK) $(sh_OBJECTS) $(sh_LDADD) $(LIBS)
+clara$(EXEEXT): $(clara_OBJECTS) $(clara_DEPENDENCIES) $(EXTRA_clara_DEPENDENCIES) 
+	@rm -f clara$(EXEEXT)
+	$(AM_V_CCLD)$(clara_LINK) $(clara_OBJECTS) $(clara_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -368,14 +369,14 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sh-builtins.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sh-cmd_ast.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sh-eval.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sh-jobs.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sh-main.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sh-parse.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sh-proc.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sh-vec.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clara-builtins.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clara-cmd_ast.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clara-eval.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clara-jobs.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clara-main.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clara-parse.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clara-proc.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clara-vec.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -397,117 +398,117 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
-sh-main.o: main.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-main.o -MD -MP -MF $(DEPDIR)/sh-main.Tpo -c -o sh-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-main.Tpo $(DEPDIR)/sh-main.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='main.c' object='sh-main.o' libtool=no @AMDEPBACKSLASH@
+clara-main.o: main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-main.o -MD -MP -MF $(DEPDIR)/clara-main.Tpo -c -o clara-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-main.Tpo $(DEPDIR)/clara-main.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='main.c' object='clara-main.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
 
-sh-main.obj: main.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-main.obj -MD -MP -MF $(DEPDIR)/sh-main.Tpo -c -o sh-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-main.Tpo $(DEPDIR)/sh-main.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='main.c' object='sh-main.obj' libtool=no @AMDEPBACKSLASH@
+clara-main.obj: main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-main.obj -MD -MP -MF $(DEPDIR)/clara-main.Tpo -c -o clara-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-main.Tpo $(DEPDIR)/clara-main.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='main.c' object='clara-main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
 
-sh-vec.o: vec.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-vec.o -MD -MP -MF $(DEPDIR)/sh-vec.Tpo -c -o sh-vec.o `test -f 'vec.c' || echo '$(srcdir)/'`vec.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-vec.Tpo $(DEPDIR)/sh-vec.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vec.c' object='sh-vec.o' libtool=no @AMDEPBACKSLASH@
+clara-vec.o: vec.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-vec.o -MD -MP -MF $(DEPDIR)/clara-vec.Tpo -c -o clara-vec.o `test -f 'vec.c' || echo '$(srcdir)/'`vec.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-vec.Tpo $(DEPDIR)/clara-vec.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vec.c' object='clara-vec.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-vec.o `test -f 'vec.c' || echo '$(srcdir)/'`vec.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-vec.o `test -f 'vec.c' || echo '$(srcdir)/'`vec.c
 
-sh-vec.obj: vec.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-vec.obj -MD -MP -MF $(DEPDIR)/sh-vec.Tpo -c -o sh-vec.obj `if test -f 'vec.c'; then $(CYGPATH_W) 'vec.c'; else $(CYGPATH_W) '$(srcdir)/vec.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-vec.Tpo $(DEPDIR)/sh-vec.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vec.c' object='sh-vec.obj' libtool=no @AMDEPBACKSLASH@
+clara-vec.obj: vec.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-vec.obj -MD -MP -MF $(DEPDIR)/clara-vec.Tpo -c -o clara-vec.obj `if test -f 'vec.c'; then $(CYGPATH_W) 'vec.c'; else $(CYGPATH_W) '$(srcdir)/vec.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-vec.Tpo $(DEPDIR)/clara-vec.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vec.c' object='clara-vec.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-vec.obj `if test -f 'vec.c'; then $(CYGPATH_W) 'vec.c'; else $(CYGPATH_W) '$(srcdir)/vec.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-vec.obj `if test -f 'vec.c'; then $(CYGPATH_W) 'vec.c'; else $(CYGPATH_W) '$(srcdir)/vec.c'; fi`
 
-sh-cmd_ast.o: cmd_ast.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-cmd_ast.o -MD -MP -MF $(DEPDIR)/sh-cmd_ast.Tpo -c -o sh-cmd_ast.o `test -f 'cmd_ast.c' || echo '$(srcdir)/'`cmd_ast.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-cmd_ast.Tpo $(DEPDIR)/sh-cmd_ast.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='cmd_ast.c' object='sh-cmd_ast.o' libtool=no @AMDEPBACKSLASH@
+clara-cmd_ast.o: cmd_ast.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-cmd_ast.o -MD -MP -MF $(DEPDIR)/clara-cmd_ast.Tpo -c -o clara-cmd_ast.o `test -f 'cmd_ast.c' || echo '$(srcdir)/'`cmd_ast.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-cmd_ast.Tpo $(DEPDIR)/clara-cmd_ast.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='cmd_ast.c' object='clara-cmd_ast.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-cmd_ast.o `test -f 'cmd_ast.c' || echo '$(srcdir)/'`cmd_ast.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-cmd_ast.o `test -f 'cmd_ast.c' || echo '$(srcdir)/'`cmd_ast.c
 
-sh-cmd_ast.obj: cmd_ast.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-cmd_ast.obj -MD -MP -MF $(DEPDIR)/sh-cmd_ast.Tpo -c -o sh-cmd_ast.obj `if test -f 'cmd_ast.c'; then $(CYGPATH_W) 'cmd_ast.c'; else $(CYGPATH_W) '$(srcdir)/cmd_ast.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-cmd_ast.Tpo $(DEPDIR)/sh-cmd_ast.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='cmd_ast.c' object='sh-cmd_ast.obj' libtool=no @AMDEPBACKSLASH@
+clara-cmd_ast.obj: cmd_ast.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-cmd_ast.obj -MD -MP -MF $(DEPDIR)/clara-cmd_ast.Tpo -c -o clara-cmd_ast.obj `if test -f 'cmd_ast.c'; then $(CYGPATH_W) 'cmd_ast.c'; else $(CYGPATH_W) '$(srcdir)/cmd_ast.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-cmd_ast.Tpo $(DEPDIR)/clara-cmd_ast.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='cmd_ast.c' object='clara-cmd_ast.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-cmd_ast.obj `if test -f 'cmd_ast.c'; then $(CYGPATH_W) 'cmd_ast.c'; else $(CYGPATH_W) '$(srcdir)/cmd_ast.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-cmd_ast.obj `if test -f 'cmd_ast.c'; then $(CYGPATH_W) 'cmd_ast.c'; else $(CYGPATH_W) '$(srcdir)/cmd_ast.c'; fi`
 
-sh-eval.o: eval.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-eval.o -MD -MP -MF $(DEPDIR)/sh-eval.Tpo -c -o sh-eval.o `test -f 'eval.c' || echo '$(srcdir)/'`eval.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-eval.Tpo $(DEPDIR)/sh-eval.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='eval.c' object='sh-eval.o' libtool=no @AMDEPBACKSLASH@
+clara-eval.o: eval.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-eval.o -MD -MP -MF $(DEPDIR)/clara-eval.Tpo -c -o clara-eval.o `test -f 'eval.c' || echo '$(srcdir)/'`eval.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-eval.Tpo $(DEPDIR)/clara-eval.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='eval.c' object='clara-eval.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-eval.o `test -f 'eval.c' || echo '$(srcdir)/'`eval.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-eval.o `test -f 'eval.c' || echo '$(srcdir)/'`eval.c
 
-sh-eval.obj: eval.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-eval.obj -MD -MP -MF $(DEPDIR)/sh-eval.Tpo -c -o sh-eval.obj `if test -f 'eval.c'; then $(CYGPATH_W) 'eval.c'; else $(CYGPATH_W) '$(srcdir)/eval.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-eval.Tpo $(DEPDIR)/sh-eval.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='eval.c' object='sh-eval.obj' libtool=no @AMDEPBACKSLASH@
+clara-eval.obj: eval.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-eval.obj -MD -MP -MF $(DEPDIR)/clara-eval.Tpo -c -o clara-eval.obj `if test -f 'eval.c'; then $(CYGPATH_W) 'eval.c'; else $(CYGPATH_W) '$(srcdir)/eval.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-eval.Tpo $(DEPDIR)/clara-eval.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='eval.c' object='clara-eval.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-eval.obj `if test -f 'eval.c'; then $(CYGPATH_W) 'eval.c'; else $(CYGPATH_W) '$(srcdir)/eval.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-eval.obj `if test -f 'eval.c'; then $(CYGPATH_W) 'eval.c'; else $(CYGPATH_W) '$(srcdir)/eval.c'; fi`
 
-sh-builtins.o: builtins.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-builtins.o -MD -MP -MF $(DEPDIR)/sh-builtins.Tpo -c -o sh-builtins.o `test -f 'builtins.c' || echo '$(srcdir)/'`builtins.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-builtins.Tpo $(DEPDIR)/sh-builtins.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='builtins.c' object='sh-builtins.o' libtool=no @AMDEPBACKSLASH@
+clara-builtins.o: builtins.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-builtins.o -MD -MP -MF $(DEPDIR)/clara-builtins.Tpo -c -o clara-builtins.o `test -f 'builtins.c' || echo '$(srcdir)/'`builtins.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-builtins.Tpo $(DEPDIR)/clara-builtins.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='builtins.c' object='clara-builtins.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-builtins.o `test -f 'builtins.c' || echo '$(srcdir)/'`builtins.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-builtins.o `test -f 'builtins.c' || echo '$(srcdir)/'`builtins.c
 
-sh-builtins.obj: builtins.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-builtins.obj -MD -MP -MF $(DEPDIR)/sh-builtins.Tpo -c -o sh-builtins.obj `if test -f 'builtins.c'; then $(CYGPATH_W) 'builtins.c'; else $(CYGPATH_W) '$(srcdir)/builtins.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-builtins.Tpo $(DEPDIR)/sh-builtins.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='builtins.c' object='sh-builtins.obj' libtool=no @AMDEPBACKSLASH@
+clara-builtins.obj: builtins.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-builtins.obj -MD -MP -MF $(DEPDIR)/clara-builtins.Tpo -c -o clara-builtins.obj `if test -f 'builtins.c'; then $(CYGPATH_W) 'builtins.c'; else $(CYGPATH_W) '$(srcdir)/builtins.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-builtins.Tpo $(DEPDIR)/clara-builtins.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='builtins.c' object='clara-builtins.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-builtins.obj `if test -f 'builtins.c'; then $(CYGPATH_W) 'builtins.c'; else $(CYGPATH_W) '$(srcdir)/builtins.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-builtins.obj `if test -f 'builtins.c'; then $(CYGPATH_W) 'builtins.c'; else $(CYGPATH_W) '$(srcdir)/builtins.c'; fi`
 
-sh-proc.o: proc.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-proc.o -MD -MP -MF $(DEPDIR)/sh-proc.Tpo -c -o sh-proc.o `test -f 'proc.c' || echo '$(srcdir)/'`proc.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-proc.Tpo $(DEPDIR)/sh-proc.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='proc.c' object='sh-proc.o' libtool=no @AMDEPBACKSLASH@
+clara-proc.o: proc.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-proc.o -MD -MP -MF $(DEPDIR)/clara-proc.Tpo -c -o clara-proc.o `test -f 'proc.c' || echo '$(srcdir)/'`proc.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-proc.Tpo $(DEPDIR)/clara-proc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='proc.c' object='clara-proc.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-proc.o `test -f 'proc.c' || echo '$(srcdir)/'`proc.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-proc.o `test -f 'proc.c' || echo '$(srcdir)/'`proc.c
 
-sh-proc.obj: proc.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-proc.obj -MD -MP -MF $(DEPDIR)/sh-proc.Tpo -c -o sh-proc.obj `if test -f 'proc.c'; then $(CYGPATH_W) 'proc.c'; else $(CYGPATH_W) '$(srcdir)/proc.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-proc.Tpo $(DEPDIR)/sh-proc.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='proc.c' object='sh-proc.obj' libtool=no @AMDEPBACKSLASH@
+clara-proc.obj: proc.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-proc.obj -MD -MP -MF $(DEPDIR)/clara-proc.Tpo -c -o clara-proc.obj `if test -f 'proc.c'; then $(CYGPATH_W) 'proc.c'; else $(CYGPATH_W) '$(srcdir)/proc.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-proc.Tpo $(DEPDIR)/clara-proc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='proc.c' object='clara-proc.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-proc.obj `if test -f 'proc.c'; then $(CYGPATH_W) 'proc.c'; else $(CYGPATH_W) '$(srcdir)/proc.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-proc.obj `if test -f 'proc.c'; then $(CYGPATH_W) 'proc.c'; else $(CYGPATH_W) '$(srcdir)/proc.c'; fi`
 
-sh-jobs.o: jobs.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-jobs.o -MD -MP -MF $(DEPDIR)/sh-jobs.Tpo -c -o sh-jobs.o `test -f 'jobs.c' || echo '$(srcdir)/'`jobs.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-jobs.Tpo $(DEPDIR)/sh-jobs.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='jobs.c' object='sh-jobs.o' libtool=no @AMDEPBACKSLASH@
+clara-jobs.o: jobs.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-jobs.o -MD -MP -MF $(DEPDIR)/clara-jobs.Tpo -c -o clara-jobs.o `test -f 'jobs.c' || echo '$(srcdir)/'`jobs.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-jobs.Tpo $(DEPDIR)/clara-jobs.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='jobs.c' object='clara-jobs.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-jobs.o `test -f 'jobs.c' || echo '$(srcdir)/'`jobs.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-jobs.o `test -f 'jobs.c' || echo '$(srcdir)/'`jobs.c
 
-sh-jobs.obj: jobs.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-jobs.obj -MD -MP -MF $(DEPDIR)/sh-jobs.Tpo -c -o sh-jobs.obj `if test -f 'jobs.c'; then $(CYGPATH_W) 'jobs.c'; else $(CYGPATH_W) '$(srcdir)/jobs.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-jobs.Tpo $(DEPDIR)/sh-jobs.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='jobs.c' object='sh-jobs.obj' libtool=no @AMDEPBACKSLASH@
+clara-jobs.obj: jobs.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-jobs.obj -MD -MP -MF $(DEPDIR)/clara-jobs.Tpo -c -o clara-jobs.obj `if test -f 'jobs.c'; then $(CYGPATH_W) 'jobs.c'; else $(CYGPATH_W) '$(srcdir)/jobs.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-jobs.Tpo $(DEPDIR)/clara-jobs.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='jobs.c' object='clara-jobs.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-jobs.obj `if test -f 'jobs.c'; then $(CYGPATH_W) 'jobs.c'; else $(CYGPATH_W) '$(srcdir)/jobs.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-jobs.obj `if test -f 'jobs.c'; then $(CYGPATH_W) 'jobs.c'; else $(CYGPATH_W) '$(srcdir)/jobs.c'; fi`
 
-sh-parse.o: parse.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-parse.o -MD -MP -MF $(DEPDIR)/sh-parse.Tpo -c -o sh-parse.o `test -f 'parse.c' || echo '$(srcdir)/'`parse.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-parse.Tpo $(DEPDIR)/sh-parse.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='parse.c' object='sh-parse.o' libtool=no @AMDEPBACKSLASH@
+clara-parse.o: parse.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-parse.o -MD -MP -MF $(DEPDIR)/clara-parse.Tpo -c -o clara-parse.o `test -f 'parse.c' || echo '$(srcdir)/'`parse.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-parse.Tpo $(DEPDIR)/clara-parse.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='parse.c' object='clara-parse.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-parse.o `test -f 'parse.c' || echo '$(srcdir)/'`parse.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-parse.o `test -f 'parse.c' || echo '$(srcdir)/'`parse.c
 
-sh-parse.obj: parse.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -MT sh-parse.obj -MD -MP -MF $(DEPDIR)/sh-parse.Tpo -c -o sh-parse.obj `if test -f 'parse.c'; then $(CYGPATH_W) 'parse.c'; else $(CYGPATH_W) '$(srcdir)/parse.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/sh-parse.Tpo $(DEPDIR)/sh-parse.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='parse.c' object='sh-parse.obj' libtool=no @AMDEPBACKSLASH@
+clara-parse.obj: parse.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-parse.obj -MD -MP -MF $(DEPDIR)/clara-parse.Tpo -c -o clara-parse.obj `if test -f 'parse.c'; then $(CYGPATH_W) 'parse.c'; else $(CYGPATH_W) '$(srcdir)/parse.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-parse.Tpo $(DEPDIR)/clara-parse.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='parse.c' object='clara-parse.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sh_CFLAGS) $(CFLAGS) -c -o sh-parse.obj `if test -f 'parse.c'; then $(CYGPATH_W) 'parse.c'; else $(CYGPATH_W) '$(srcdir)/parse.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-parse.obj `if test -f 'parse.c'; then $(CYGPATH_W) 'parse.c'; else $(CYGPATH_W) '$(srcdir)/parse.c'; fi`
 
 .y.c:
 	$(AM_V_YACC)$(am__skipyacc) $(SHELL) $(YLWRAP) $< y.tab.c $@ y.tab.h `echo $@ | $(am__yacc_c2h)` y.output $*.output -- $(YACCCOMPILE)
@@ -642,14 +643,14 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-	-rm -f ./$(DEPDIR)/sh-builtins.Po
-	-rm -f ./$(DEPDIR)/sh-cmd_ast.Po
-	-rm -f ./$(DEPDIR)/sh-eval.Po
-	-rm -f ./$(DEPDIR)/sh-jobs.Po
-	-rm -f ./$(DEPDIR)/sh-main.Po
-	-rm -f ./$(DEPDIR)/sh-parse.Po
-	-rm -f ./$(DEPDIR)/sh-proc.Po
-	-rm -f ./$(DEPDIR)/sh-vec.Po
+	-rm -f ./$(DEPDIR)/clara-builtins.Po
+	-rm -f ./$(DEPDIR)/clara-cmd_ast.Po
+	-rm -f ./$(DEPDIR)/clara-eval.Po
+	-rm -f ./$(DEPDIR)/clara-jobs.Po
+	-rm -f ./$(DEPDIR)/clara-main.Po
+	-rm -f ./$(DEPDIR)/clara-parse.Po
+	-rm -f ./$(DEPDIR)/clara-proc.Po
+	-rm -f ./$(DEPDIR)/clara-vec.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -695,14 +696,14 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -f ./$(DEPDIR)/sh-builtins.Po
-	-rm -f ./$(DEPDIR)/sh-cmd_ast.Po
-	-rm -f ./$(DEPDIR)/sh-eval.Po
-	-rm -f ./$(DEPDIR)/sh-jobs.Po
-	-rm -f ./$(DEPDIR)/sh-main.Po
-	-rm -f ./$(DEPDIR)/sh-parse.Po
-	-rm -f ./$(DEPDIR)/sh-proc.Po
-	-rm -f ./$(DEPDIR)/sh-vec.Po
+	-rm -f ./$(DEPDIR)/clara-builtins.Po
+	-rm -f ./$(DEPDIR)/clara-cmd_ast.Po
+	-rm -f ./$(DEPDIR)/clara-eval.Po
+	-rm -f ./$(DEPDIR)/clara-jobs.Po
+	-rm -f ./$(DEPDIR)/clara-main.Po
+	-rm -f ./$(DEPDIR)/clara-parse.Po
+	-rm -f ./$(DEPDIR)/clara-proc.Po
+	-rm -f ./$(DEPDIR)/clara-vec.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

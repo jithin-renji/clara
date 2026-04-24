@@ -1,4 +1,4 @@
-AC_INIT([sh], [0.1], [jithin0904@gmail.com])
+AC_INIT([clara], [0.1], [jithin0904@gmail.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CC
 
