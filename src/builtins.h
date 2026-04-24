@@ -3,7 +3,7 @@
 
 #include "vec.h"
 
-#define NUM_BUILTINS        4
+#define NUM_BUILTINS        5
 
 typedef struct Builtin
 {

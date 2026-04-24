@@ -16,6 +16,7 @@ Builtin_t builtins[NUM_BUILTINS + 1] = {
     { "cd", change_working_dir },
     { "jobs", show_job_list },
     { "fg", bring_job_foreground },
+    { "bg", send_job_background },
     { "exit", exit_shell },
     { "", NULL }
 };
@@ -80,7 +81,13 @@ static int bring_job_foreground(Vec_t *argv)
 
 static int send_job_background(Vec_t *argv)
 {
-    return 0;
+    Job_t *job = jobs;
+    if (!job) {
+        fprintf(stderr, "No stopped jobs to send to the background.\n");
+        return -1;
+    }
+
+    return job_bg(job);
 }
 
 static int exit_shell(Vec_t *argv)

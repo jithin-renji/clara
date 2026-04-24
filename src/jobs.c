@@ -44,6 +44,7 @@ void job_wait(Job_t *job)
 {
     int wstatus;
     pid_t pid;
+    int should_remove_job = 1;
     while ((pid = waitpid(-job->pgrp, &wstatus, WUNTRACED)) > 0) {
         if (WIFSTOPPED(wstatus)) {
             printf("\n[%ld] Stopped\n"
@@ -53,7 +54,7 @@ void job_wait(Job_t *job)
             job->is_running = 0;
             break;
         } else if (WIFSIGNALED(wstatus)) {
-            printf("\n[%ld] Terminated (signal %d)\n", job->id, WTERMSIG(wstatus));
+            printf("\n[%ld] Terminated (signal %d) (JOB REMOVED)\n", job->id, WTERMSIG(wstatus));
             job_remove(job);
             break;
         } else if (WIFEXITED(wstatus)) {
@@ -61,7 +62,10 @@ void job_wait(Job_t *job)
              * the processes in this job exits.
              *
              * TODO: Remove job only after all processes have exited */
-            job_remove(job);
+            if (should_remove_job) {
+                job_remove(job);
+                should_remove_job = 0;
+            }
         }
     }
 
@@ -70,7 +74,7 @@ void job_wait(Job_t *job)
             perror("waitpid");
         }
 
-        job_remove(job);
+        // job_remove(job);
     }
 
     tcsetpgrp(STDIN_FILENO, getpgrp());
@@ -84,8 +88,27 @@ int job_fg(Job_t *job)
     }
 
     fprintf(stderr, "%s\n", jobs->cmdline);
+    job->is_foreground = 1;
+    job->is_running = 1;
+
     tcsetpgrp(STDIN_FILENO, job->pgrp);
     job_wait(job);
+
+    return 0;
+}
+
+int job_bg(Job_t *job)
+{
+    if (kill(-job->pgrp, SIGCONT) == -1) {
+        perror("Unable to resume job");
+        return -1;
+    }
+
+    fprintf(stderr, "\n[%ld] %s &\n", jobs->id, jobs->cmdline);
+    job->is_foreground = 0;
+    job->is_running = 1;
+
+    tcsetpgrp(STDIN_FILENO, getpgrp());
 
     return 0;
 }
