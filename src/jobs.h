@@ -19,6 +19,7 @@ extern Job_t *jobs;
 
 void job_create(Pipeline_t *pipeline, int foreground);
 void job_wait(Job_t *job);
+void reap_completed_bg_procs(int s);
 int job_fg(Job_t *job);
 int job_bg(Job_t *job);
 void job_free(Job_t *job);

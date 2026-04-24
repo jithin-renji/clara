@@ -38,6 +38,8 @@ void ignore_interactive_signals(void)
 int main(int argc, const char *argv[])
 {
     ignore_interactive_signals();
+    signal(SIGCHLD, reap_completed_bg_procs);
+
     pid_t sh_pgid = getpid();
     if (setpgid(sh_pgid, sh_pgid) == -1) {
         perror("Unable to create shell process group:");

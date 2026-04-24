@@ -83,6 +83,27 @@ void job_wait(Job_t *job)
     tcsetpgrp(STDIN_FILENO, getpgrp());
 }
 
+void reap_completed_bg_procs(int s)
+{
+    pid_t pid;
+    int wstatus;
+
+    /* Here, we're only reaping a single process at a time. No concept
+     * of jobs. Should find a way to remove job when all procs in the
+     * job have been reaped. */
+    while ((pid = waitpid(-1, &wstatus, WNOHANG)) > 0) {
+        if (WIFEXITED(wstatus)) {
+            /* TODO: Update status of job, notify user */
+            fprintf(stderr, "\n[(pid) %d] Exited\n", pid);
+            break;
+        } else if (WIFSIGNALED(wstatus)) {
+            fprintf(stderr, "\n[(pid) %d] Terminated (signal %d)\n",
+                pid, WTERMSIG(wstatus));
+            break;
+        }
+    }
+}
+
 int job_fg(Job_t *job)
 {
     if (kill(-job->pgrp, SIGCONT) == -1) {
