@@ -57,15 +57,16 @@ void job_wait(Job_t *job)
             job->is_running = 0;
             break;
         } else if (WIFSIGNALED(wstatus)) {
-            printf("\n[%ld] Terminated (signal %d) (JOB REMOVED)\n", job->id, WTERMSIG(wstatus));
+            printf("\n[%ld] Terminated (signal %d)\n", job->id, WTERMSIG(wstatus));
+
+            /* Remove job regardless of if we marked it as completed
+             * because it was terminated by a signal */
             job_remove(job);
             break;
         } else if (WIFEXITED(wstatus)) {
-            /* This removes the job as soon as one of
-             * the processes in this job exits.
-             *
-             * TODO: Remove job only after all processes have exited */
-            if (should_remove_job) {
+            Proc_t *proc = proc_find(job->pipeline, pid);
+            proc->completed = 1;
+            if (job_is_completed(job)) {
                 job_remove(job);
                 should_remove_job = 0;
             }
@@ -76,8 +77,6 @@ void job_wait(Job_t *job)
         if (errno != ECHILD) {
             perror("waitpid");
         }
-
-        // job_remove(job);
     }
 
     tcsetpgrp(STDIN_FILENO, getpgrp());
@@ -112,12 +111,16 @@ void reap_completed_bg_procs(int s)
      * job have been reaped. */
     Job_t *job = NULL;
     while ((pid = waitpid(-1, &wstatus, WNOHANG)) > 0) {
-        /* TODO: Mark corresponding Proc_t as completed */
         job = job_find_by_pid(pid);
+        Proc_t *proc = proc_find(job->pipeline, pid);
+        if (proc) {
+            proc->completed = true;
+        }
 
         if (WIFEXITED(wstatus)) {
-            /* TODO: Update status of job, notify user */
-            // fprintf(stderr, "\n[(pid) %d] Exited\n", pid);
+            if (job && !job->is_foreground) {
+                fprintf(stderr, "\n[%ld] Exited\n", job->id);
+            }
 
             break;
         } else if (WIFSIGNALED(wstatus)) {
@@ -133,10 +136,20 @@ void reap_completed_bg_procs(int s)
         }
     }
 
-    if (pid != -1 && job) {
+    if (pid != -1 && job && job_is_completed(job)) {
         job_remove(job);
     }
+}
 
+int job_is_completed(Job_t *job)
+{
+    for (Proc_t *proc = job->pipeline; proc; proc = proc->next) {
+        if (!proc->completed) {
+            return 0;
+        }
+    }
+
+    return 1;
 }
 
 int job_fg(Job_t *job)

@@ -18,9 +18,13 @@ typedef struct Job
 extern Job_t *jobs;
 
 void job_create(Pipeline_t *pipeline, int foreground);
+
 void job_wait(Job_t *job);
 Job_t *job_find_by_pid(pid_t pid);
 void reap_completed_bg_procs(int s);
+
+int job_is_completed(Job_t *job);
+
 int job_fg(Job_t *job);
 int job_bg(Job_t *job);
 void job_free(Job_t *job);

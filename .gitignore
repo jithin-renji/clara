@@ -13,7 +13,7 @@ stamp-h1
 parse.c
 parse.h
 
-test.sh
+test*.sh
 
 autom4te.cache/
 .deps/

@@ -35,6 +35,20 @@ Proc_t *proc_create(Vec_t *argv)
     return proc;
 }
 
+Proc_t *proc_find(Proc_t *pipeline, pid_t pid)
+{
+    Proc_t *cur = pipeline;
+    while (cur) {
+        if (cur->pid == pid) {
+            return cur;
+        }
+
+        cur = cur->next;
+    }
+
+    return NULL;
+}
+
 void pipeline_append(Pipeline_t *pipeline, Proc_t *proc)
 {
     Proc_t *cur = pipeline;
