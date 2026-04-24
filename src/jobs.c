@@ -25,17 +25,20 @@ static void job_add(Job_t *job)
 static void job_remove(Job_t *job)
 {
     Job_t *cur = jobs;
+    Job_t *prev = NULL;
     while (cur) {
-        if (cur->next == job) {
-            cur->next = job->next;
+        if (cur == job) {
+            if (prev) {
+                prev->next = job->next;
+            } else {
+                jobs = job->next;
+            }
+
             job_free(job);
-            break;
-        } else if (cur == job) {
-            job_free(job);
-            jobs = NULL;
             break;
         }
 
+        prev = cur;
         cur = cur->next;
     }
 }
