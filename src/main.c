@@ -35,21 +35,33 @@ void ignore_interactive_signals(void)
     signal(SIGTTOU, SIG_IGN);
 }
 
-int main(int argc, const char *argv[])
+void clara_init(void)
 {
+    pid_t clara_pgid;
+    while (tcgetpgrp(STDIN_FILENO) != (clara_pgid = getpgrp())) {
+        kill(-clara_pgid, SIGTTIN);
+    }
+
     ignore_interactive_signals();
     signal(SIGCHLD, reap_completed_bg_procs);
 
-    pid_t sh_pgid = getpid();
-    if (setpgid(sh_pgid, sh_pgid) == -1) {
-        perror("Unable to create shell process group:");
-        exit(EXIT_FAILURE);
+    clara_pgid = getpid();
+    if (getpgrp() != clara_pgid) {
+        if (setpgid(clara_pgid, clara_pgid) == -1) {
+            perror("Unable to create shell process group");
+            exit(EXIT_FAILURE);
+        }
     }
 
-    if (tcsetpgrp(STDIN_FILENO, sh_pgid) == -1) {
-        perror("tcsetpgrp:");
+    if (tcsetpgrp(STDIN_FILENO, clara_pgid) == -1) {
+        perror("Unable to set foreground");
         exit(EXIT_FAILURE);
     }
+}
+
+int main(int argc, const char *argv[])
+{
+    clara_init();
 
     if (argc == 2 && strcmp(argv[1], "--debug") == 0)
         yydebug = 1;
