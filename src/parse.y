@@ -27,9 +27,7 @@ void yyerror(ASTNode_t **root, char const *e);
 %token ERROR
 %token <word> WORD
 %type <words> simple_command
-%type <ast_root> command_list
-%type <ast_root> pipeline
-%type <ast_root> input
+%type <ast_root> async_command command_list pipeline input
 
 %left '|'
 %precedence ';'
@@ -43,6 +41,9 @@ input:
         *root = $1;
     }
     | pipeline {
+        *root = $1;
+    }
+    | async_command {
         *root = $1;
     }
     | pipeline ';' command_list {
@@ -98,6 +99,17 @@ simple_command:
         $$ = vec_append($1, $2);
     }
     ;
+
+async_command:
+    simple_command '&' {
+        $$ = ast_node_create(
+            ASYNC_COMMAND, NULL,
+            ast_node_create(SIMPLE_COMMAND, $1, NULL, NULL), NULL
+        ); 
+    }
+    | pipeline '&' {
+        $$ = ast_node_create(ASYNC_COMMAND, NULL, $1, NULL);
+    }
 
 %%
 

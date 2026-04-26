@@ -5,7 +5,7 @@
 
 typedef enum NodeType
 {
-    COMMAND_LIST, SIMPLE_COMMAND, PIPELINE
+    COMMAND_LIST, SIMPLE_COMMAND, PIPELINE, ASYNC_COMMAND
 } NodeType_t;
 
 typedef struct ASTNode

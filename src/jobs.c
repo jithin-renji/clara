@@ -56,7 +56,7 @@ void job_wait(Job_t *job)
             job->is_running = 0;
             break;
         } else if (WIFSIGNALED(wstatus)) {
-            printf("\n[%ld] Terminated (signal %d)\n", job->id, WTERMSIG(wstatus));
+            printf("\nTerminated (signal %d)\n", WTERMSIG(wstatus));
 
             /* Remove job regardless of if we marked it as completed
              * because it was terminated by a signal */
@@ -115,30 +115,26 @@ void reap_completed_bg_procs(int s)
     pid_t pid;
     int wstatus;
 
-    /* Here, we're only reaping a single process at a time. No concept
-     * of jobs. Should find a way to remove job when all procs in the
-     * job have been reaped. */
     Job_t *job = NULL;
     while ((pid = waitpid(-1, &wstatus, WNOHANG)) > 0) {
         job = job_find_by_pid(pid);
-        Proc_t *proc = proc_find(job->pipeline, pid);
-        if (proc) {
-            proc->completed = true;
+        if (job) {
+            Proc_t *proc = proc_find(job->pipeline, pid);
+            if (proc) {
+                proc->completed = true;
+            }
         }
 
         if (WIFEXITED(wstatus)) {
-            if (job && !job->is_foreground) {
+            if (job && !job->is_foreground && job_is_completed(job)) {
                 fprintf(stderr, "\n[%ld] Exited\n", job->id);
             }
 
             break;
         } else if (WIFSIGNALED(wstatus)) {
             int s = WTERMSIG(wstatus);
-            if (job) {
+            if (job && job_is_completed(job)) {
                 fprintf(stderr, "\n[%ld] Terminated (signal %d)\n", job->id, s);
-            } else {
-                /* If we're here, something's wrong */
-                fprintf(stderr, "\n[(pid) %d] Terminated (signal %d)\n", pid, s);
             }
 
             break;
@@ -196,6 +192,13 @@ int job_bg(Job_t *job)
 
 void job_create(Pipeline_t *pipeline, int is_foreground)
 {
+    sigset_t mask;
+    sigset_t prev_mask;
+    sigemptyset(&mask);
+    sigaddset(&mask, SIGCHLD);
+
+    sigprocmask(SIG_BLOCK, &mask, &prev_mask);
+
     int read_fd = STDIN_FILENO;
     int write_fd = STDOUT_FILENO;
     pid_t pgrp = 0;
@@ -222,7 +225,8 @@ void job_create(Pipeline_t *pipeline, int is_foreground)
 
         switch (pid) {
         case 0:
-            proc_exec(proc, pgrp, read_fd, write_fd);
+            sigprocmask(SIG_SETMASK, &prev_mask, NULL);
+            proc_exec(proc, pgrp, read_fd, write_fd, is_foreground);
             break;
 
         default:
@@ -252,14 +256,18 @@ void job_create(Pipeline_t *pipeline, int is_foreground)
     job->cmdline = strdup(pipeline->argv->v[0]);
     job->pipeline = pipeline;
     job->pgrp = pgrp;
-    job->is_foreground = 1;
+    job->is_foreground = is_foreground;
     job->is_running = 1;
     job->next = NULL;
 
     job_add(job);
     next_job_id++;
 
-    job_wait(job);
+    if (is_foreground) {
+        job_wait(job);
+    }
+
+    sigprocmask(SIG_SETMASK, &prev_mask, NULL);
 }
 
 void job_free(Job_t *job)

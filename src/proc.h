@@ -17,7 +17,8 @@ Pipeline_t *pipeline_create(void);
 void pipeline_append(Pipeline_t *pipeline, Proc_t *proc);
 Proc_t *proc_create(Vec_t *argv);
 Proc_t *proc_find(Proc_t *pipeline, pid_t pid);
-void proc_exec(Proc_t *proc, pid_t pgrp, int read_fd, int write_fd);
+void proc_exec(Proc_t *proc, pid_t pgrp, 
+        int read_fd, int write_fd, int is_foreground);
 void pipeline_free(Pipeline_t *pipeline);
 
 #endif

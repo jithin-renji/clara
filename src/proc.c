@@ -86,7 +86,8 @@ static void reset_signals(void)
     signal(SIGTTOU, SIG_DFL);
 }
 
-void proc_exec(Proc_t *proc, pid_t pgrp, int read_fd, int write_fd)
+void proc_exec(Proc_t *proc, pid_t pgrp, 
+        int read_fd, int write_fd, int is_foreground)
 {
     pid_t pid = getpid();
 
@@ -97,7 +98,9 @@ void proc_exec(Proc_t *proc, pid_t pgrp, int read_fd, int write_fd)
     }
 
     setpgid(pid, pgrp);
-    tcsetpgrp(STDIN_FILENO, pgrp);
+    if (is_foreground) {
+        tcsetpgrp(STDIN_FILENO, pgrp);
+    }
 
     reset_signals();
 

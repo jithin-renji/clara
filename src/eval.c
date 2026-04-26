@@ -75,29 +75,39 @@ void eval(ASTNode_t *root)
         return;
     }
 
-    if (root->type == PIPELINE) {
-        Pipeline_t *pipeline = pipeline_create();
-        eval_pipeline(root, pipeline);
-        job_create(pipeline, 1);
-
-        return;
-    }
-
-    if (root->left) {
-        eval(root->left);
-    }
-
-    if (root->right) {
-        eval(root->right);
-    }
-
     Proc_t * proc;
+    Pipeline_t *pipeline;
     switch (root->type) {
     /* A COMMAND_LIST node will always be above a SIMPLE_COMMAND node.
      * Since all of it's children have already been executed, there's
      * nothing to do here. */
     case COMMAND_LIST:
+        if (root->left) {
+            eval(root->left);
+        }
+
+        if (root->right) {
+            eval(root->right);
+        }
+
+        break;
+
     case PIPELINE:
+        pipeline = pipeline_create();
+        eval_pipeline(root, pipeline);
+        job_create(pipeline, 1);
+        break;
+
+    case ASYNC_COMMAND:
+        if (root->left->type == SIMPLE_COMMAND) {
+            proc = eval_simple_command(root->left);
+            job_create(proc, 0);
+        } else if (root->left->type == PIPELINE) {
+            pipeline = pipeline_create();
+            eval_pipeline(root->left, pipeline);
+            job_create(pipeline, 0);
+        }
+
         break;
 
     default:
