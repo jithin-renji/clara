@@ -15,9 +15,9 @@ Vec_t *vec_create(void)
 
 Vec_t *vec_append(Vec_t *vec, char *s)
 {
-    if (vec->sz + 1 < vec->__pool_sz) {
+    if (vec->sz + 1 >= vec->__pool_sz) {
         vec->__pool_sz *= 2;
-        vec->v = realloc(vec->v, vec->__pool_sz);
+        vec->v = realloc(vec->v, vec->__pool_sz * sizeof(char *));
     }
 
     vec->v[vec->sz] = s;
