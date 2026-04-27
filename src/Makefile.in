@@ -104,7 +104,7 @@ PROGRAMS = $(bin_PROGRAMS)
 am_clara_OBJECTS = clara-main.$(OBJEXT) clara-vec.$(OBJEXT) \
 	clara-cmd_ast.$(OBJEXT) clara-eval.$(OBJEXT) \
 	clara-builtins.$(OBJEXT) clara-proc.$(OBJEXT) \
-	clara-jobs.$(OBJEXT) clara-parse.$(OBJEXT)
+	clara-jobs.$(OBJEXT) clara-env.$(OBJEXT) clara-parse.$(OBJEXT)
 clara_OBJECTS = $(am_clara_OBJECTS)
 clara_LDADD = $(LDADD)
 clara_LINK = $(CCLD) $(clara_CFLAGS) $(CFLAGS) $(clara_LDFLAGS) \
@@ -125,10 +125,10 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/clara-builtins.Po \
-	./$(DEPDIR)/clara-cmd_ast.Po ./$(DEPDIR)/clara-eval.Po \
-	./$(DEPDIR)/clara-jobs.Po ./$(DEPDIR)/clara-main.Po \
-	./$(DEPDIR)/clara-parse.Po ./$(DEPDIR)/clara-proc.Po \
-	./$(DEPDIR)/clara-vec.Po
+	./$(DEPDIR)/clara-cmd_ast.Po ./$(DEPDIR)/clara-env.Po \
+	./$(DEPDIR)/clara-eval.Po ./$(DEPDIR)/clara-jobs.Po \
+	./$(DEPDIR)/clara-main.Po ./$(DEPDIR)/clara-parse.Po \
+	./$(DEPDIR)/clara-proc.Po ./$(DEPDIR)/clara-vec.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -275,7 +275,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_YFLAGS = -d -Wno-yacc -Wcounterexamples
 clara_SOURCES = main.c colors.h vec.h vec.c cmd_ast.h cmd_ast.c eval.h eval.c builtins.h builtins.c \
-				proc.h proc.c jobs.h jobs.c parse.y
+				proc.h proc.c jobs.h jobs.c env.h env.c parse.y
 
 clara_LDFLAGS = -lreadline
 clara_CFLAGS = -Wall
@@ -371,6 +371,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clara-builtins.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clara-cmd_ast.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clara-env.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clara-eval.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clara-jobs.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/clara-main.Po@am__quote@ # am--include-marker
@@ -495,6 +496,20 @@ clara-jobs.obj: jobs.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='jobs.c' object='clara-jobs.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-jobs.obj `if test -f 'jobs.c'; then $(CYGPATH_W) 'jobs.c'; else $(CYGPATH_W) '$(srcdir)/jobs.c'; fi`
+
+clara-env.o: env.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-env.o -MD -MP -MF $(DEPDIR)/clara-env.Tpo -c -o clara-env.o `test -f 'env.c' || echo '$(srcdir)/'`env.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-env.Tpo $(DEPDIR)/clara-env.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='env.c' object='clara-env.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-env.o `test -f 'env.c' || echo '$(srcdir)/'`env.c
+
+clara-env.obj: env.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-env.obj -MD -MP -MF $(DEPDIR)/clara-env.Tpo -c -o clara-env.obj `if test -f 'env.c'; then $(CYGPATH_W) 'env.c'; else $(CYGPATH_W) '$(srcdir)/env.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/clara-env.Tpo $(DEPDIR)/clara-env.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='env.c' object='clara-env.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -c -o clara-env.obj `if test -f 'env.c'; then $(CYGPATH_W) 'env.c'; else $(CYGPATH_W) '$(srcdir)/env.c'; fi`
 
 clara-parse.o: parse.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(clara_CFLAGS) $(CFLAGS) -MT clara-parse.o -MD -MP -MF $(DEPDIR)/clara-parse.Tpo -c -o clara-parse.o `test -f 'parse.c' || echo '$(srcdir)/'`parse.c
@@ -645,6 +660,7 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 distclean: distclean-am
 	-rm -f ./$(DEPDIR)/clara-builtins.Po
 	-rm -f ./$(DEPDIR)/clara-cmd_ast.Po
+	-rm -f ./$(DEPDIR)/clara-env.Po
 	-rm -f ./$(DEPDIR)/clara-eval.Po
 	-rm -f ./$(DEPDIR)/clara-jobs.Po
 	-rm -f ./$(DEPDIR)/clara-main.Po
@@ -698,6 +714,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/clara-builtins.Po
 	-rm -f ./$(DEPDIR)/clara-cmd_ast.Po
+	-rm -f ./$(DEPDIR)/clara-env.Po
 	-rm -f ./$(DEPDIR)/clara-eval.Po
 	-rm -f ./$(DEPDIR)/clara-jobs.Po
 	-rm -f ./$(DEPDIR)/clara-main.Po

@@ -2,6 +2,7 @@
 #include "cmd_ast.h"
 #include "eval.h"
 #include "jobs.h"
+#include "env.h"
 #include "colors.h"
 
 #ifdef HAVE_CONFIG_H
@@ -28,8 +29,6 @@ char *cur_cmd;
 char *cur_ch;
 
 int interactive;
-
-Vec_t *env;
 
 void ignore_interactive_signals(void)
 {
@@ -70,20 +69,11 @@ void clara_init(void)
     }
 }
 
-void parse_env(char *envp[])
-{
-    env = vec_create();
-    for (int i = 0; envp[i] != NULL; i++) {
-        env = vec_append(env, envp[i]);
-    }
-}
-
-int main(int argc, const char *argv[], char *envp[])
+int main(int argc, const char *argv[], const char *envp[])
 {
     clara_init();
-    parse_env(envp);
+    env_init(envp);
 
-//    vec_print(env);
     if (argc == 2 && strcmp(argv[1], "--debug") == 0)
         yydebug = 1;
 

@@ -1,6 +1,7 @@
 #include "eval.h"
 #include "builtins.h"
 #include "jobs.h"
+#include "env.h"
 
 #ifdef HAVE_CONFIG_H
 #   include <config.h>
@@ -34,12 +35,39 @@ static int eval_builtin(ASTNode_t *cmd)
     return 0;
 }
 
+static void eval_env_vars(ASTNode_t *cmd)
+{
+    if (cmd->type != SIMPLE_COMMAND) {
+        fprintf(stderr, "eval_env_vars() called for cmd->type = %d\n", cmd->type);
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < cmd->argv->sz; i++) {
+        if (cmd->argv->v[i][0] == '$') {
+            char *old = cmd->argv->v[i];
+            char *val = env_get(old + 1);
+
+            /* TODO: Remove arg from argv if the variable
+             *       doesn't exist.*/
+            if (!val) {
+                cmd->argv->v[i] = strdup("");
+            } else {
+                cmd->argv->v[i] = strdup(val);
+            }
+
+            free(old);
+        }
+    }
+}
+
 static Proc_t *eval_simple_command(ASTNode_t *cmd)
 {
     if (cmd->type != SIMPLE_COMMAND) {
         fprintf(stderr, "eval_simple_command() called for cmd->type = %d\n", cmd->type);
         exit(EXIT_FAILURE);
     }
+
+    eval_env_vars(cmd);
 
     if (eval_builtin(cmd) == 0) {
         return NULL;
