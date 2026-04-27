@@ -69,10 +69,19 @@ void clara_init(void)
     }
 }
 
+void init_wd(void)
+{
+    char *cwd = getcwd(NULL, 0);
+    env_set("PWD", cwd);
+    env_set("OLDPWD", cwd);
+    free(cwd);
+}
+
 int main(int argc, const char *argv[], const char *envp[])
 {
     clara_init();
     env_init(envp);
+    init_wd();
 
     if (argc == 2 && strcmp(argv[1], "--debug") == 0)
         yydebug = 1;

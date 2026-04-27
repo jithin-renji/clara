@@ -35,29 +35,41 @@ Builtin_t get_builtin(char *name)
 
 static int change_working_dir(Vec_t *argv)
 {
+    char *new_old_pwd = NULL;
+    char *new_pwd = NULL;
     if (argv->sz == 1) {
-        if (chdir(getenv("HOME")) == -1) {
-            perror("cd");
-            return -1;
-        }
+        new_pwd = env_get("HOME");
+        new_old_pwd = strdup(env_get("PWD"));
     } else if (argv->sz == 2) {
-        if (chdir(argv->v[1]) == -1) {
-            if (errno == ENOENT) {
-                fprintf(stderr, "cd: %s: No such file or directory\n", argv->v[1]);
-            } else {
-                perror("cd");
-            }
-
-            return -1;
+        if (strcmp(argv->v[1], "-") == 0) {
+            new_pwd = env_get("OLDPWD");
+        } else {
+            new_pwd = argv->v[1];
         }
+
+        new_old_pwd = strdup(env_get("PWD"));
     } else {
-        fprintf(stderr, "cd: too many arguments\n");
+        fprintf(stderr, "clara: cd: too many arguments\n");
         return -1;
     }
 
-    char *new_wd = getcwd(NULL, 0);
-    env_set("PWD", new_wd);
-    free(new_wd);
+    if (chdir(new_pwd) == -1) {
+        if (errno == ENOENT) {
+            fprintf(stderr, "clara: cd: no such file or directory\n");
+        }
+
+        return -1;
+    }
+
+    new_pwd = getcwd(NULL, 0);
+
+    env_set("PWD", new_pwd);
+    env_set("OLDPWD", new_old_pwd);
+
+    setenv("PWD", env_get("PWD"), 1);
+    setenv("OLDPWD", env_get("OLDPWD"), 1);
+
+    free(new_pwd);
 
     return 0;
 }

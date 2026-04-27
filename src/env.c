@@ -43,11 +43,21 @@ void env_set(const char *var, const char *val)
     }
 
     if (idx == -1) {
+        env_append(var, val);
         return;
     }
 
     free(env_list[idx].pair.val);
     env_list[idx].pair.val = strdup(val);
+}
+
+void env_append(const char *var, const char *val)
+{
+    env_list_grow_if_needed();
+    env_list[env_list->sz].pair.var = strdup(var);
+    env_list[env_list->sz].pair.val = strdup(val);
+
+    env_list->sz++;
 }
 
 char *env_get(const char *name)
