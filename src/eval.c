@@ -73,8 +73,7 @@ static Proc_t *eval_simple_command(ASTNode_t *cmd)
         return NULL;
     }
 
-
-    return proc_create(cmd->argv);
+    return proc_create(cmd);
 }
 
 static void eval_pipeline(ASTNode_t *root, Pipeline_t *pipeline)
@@ -88,13 +87,13 @@ static void eval_pipeline(ASTNode_t *root, Pipeline_t *pipeline)
         eval_pipeline(root->left, pipeline);
     } else if (root->left->type == SIMPLE_COMMAND) {
         eval_env_vars(root->left);
-        Proc_t *proc = proc_create(root->left->argv);
+        Proc_t *proc = proc_create(root->left);
         pipeline_append(pipeline, proc);
     }
 
     if (root->right->type == SIMPLE_COMMAND) {
         eval_env_vars(root->right);
-        Proc_t *proc = proc_create(root->right->argv);
+        Proc_t *proc = proc_create(root->right);
         pipeline_append(pipeline, proc);
     }
 }
@@ -141,9 +140,6 @@ void eval(ASTNode_t *root)
         break;
 
     default:
-        if (root->out_fname) {
-            printf("Got file: %s\n", root->out_fname);
-        }
         proc = eval_simple_command(root);
         if (proc) {
             job_create(proc, 1);

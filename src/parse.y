@@ -77,7 +77,6 @@ command_list:
         $$ = ast_node_create(SIMPLE_COMMAND, $1, NULL, NULL, 0, NULL, NULL);
     }
     | simple_command '>' WORD {
-        printf("File redirection detected\n");
         $$ = ast_node_create(SIMPLE_COMMAND, $1, NULL, $3, 0, NULL, NULL);
     }
     | command_list ';' simple_command {

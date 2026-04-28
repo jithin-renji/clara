@@ -18,6 +18,8 @@ Pipeline_t *pipeline_create(void)
 {
     Pipeline_t *pipeline = malloc(sizeof(Pipeline_t));
     pipeline->argv = NULL;
+    pipeline->in_fname = NULL;
+    pipeline->out_fname = NULL;
     pipeline->pid = -1;
     pipeline->completed = 0;
     pipeline->next = NULL;
@@ -25,10 +27,20 @@ Pipeline_t *pipeline_create(void)
     return pipeline;
 }
 
-Proc_t *proc_create(Vec_t *argv)
+Proc_t *proc_create(ASTNode_t *cmd)
 {
     Proc_t *proc = pipeline_create();
-    proc->argv = argv;
+    proc->argv = cmd->argv;
+    if (cmd->in_fname) {
+        proc->in_fname = strdup(cmd->in_fname);
+    }
+
+    if (cmd->out_fname) {
+        proc->out_fname = strdup(cmd->out_fname);
+        printf("out_fname: '%s'\n", proc->out_fname);
+    }
+
+    proc->outfile_append = cmd->outfile_append;
     proc->pid = -1;
     proc->completed = 0;
 
@@ -52,14 +64,13 @@ Proc_t *proc_find(Proc_t *pipeline, pid_t pid)
 void pipeline_append(Pipeline_t *pipeline, Proc_t *proc)
 {
     Proc_t *cur = pipeline;
-    if (!cur->argv) {
-        cur->argv = proc->argv;
-    } else {
-        while (cur->next != NULL) {
-            cur = cur->next;
+    while (cur) {
+        if (!cur->next) {
+            cur->next = proc;
+            break;
         }
 
-        cur->next = proc;
+        cur = cur->next;
     }
 }
 
@@ -72,7 +83,10 @@ void pipeline_free(Pipeline_t *pipeline)
     Pipeline_t *cur = pipeline;
     while (cur->next) {
         Pipeline_t *next = cur->next;
+        free(cur->in_fname);
+        free(cur->out_fname);
         free(cur);
+
         cur = next;
     }
 }
