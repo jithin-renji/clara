@@ -19,7 +19,7 @@ target_sources(clara
   src/proc.c src/vec.c
   ${BISON_parse_OUTPUTS}
 )
-
+target_compile_options(clara PRIVATE -Wall -Werror)
 target_include_directories(clara PRIVATE src/)
 
 target_link_libraries(clara readline)
