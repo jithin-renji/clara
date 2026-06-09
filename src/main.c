@@ -1,15 +1,11 @@
+#include "config.h"
+
 #include "vec.h"
 #include "cmd_ast.h"
 #include "eval.h"
 #include "jobs.h"
 #include "env.h"
 #include "colors.h"
-
-#ifdef HAVE_CONFIG_H
-#   include <config.h>
-#else
-#   error "Missing config.h"
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -91,7 +87,7 @@ int main(int argc, const char *argv[], const char *envp[])
     char *cmd = NULL;
 
     /* TODO: Remove hardcoded colors and add proper user-configurable prompt support */
-    while ((cmd = readline(GREEN PACKAGE_NAME "-" PACKAGE_VERSION "$ " RESET))) {
+    while ((cmd = readline(GREEN P_NAME "-" P_VERSION RESET "$ "))) {
         if (*cmd) {
             add_history(cmd);
         }

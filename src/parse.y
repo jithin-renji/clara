@@ -1,7 +1,7 @@
 %{
 
-#include "vec.h"
-#include "cmd_ast.h"
+#include "../src/vec.h"
+#include "../src/cmd_ast.h"
 
 #include <stdio.h>
 #include <string.h>

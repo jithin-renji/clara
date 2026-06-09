@@ -1,19 +1,11 @@
-*.out
-clara
+.\#*
+\#*\#
+*~
 *.o
-*.swp
+*.out
 
-configure~
-config.h
-config.h.in~
-config.status
-config.log
-Makefile
-stamp-h1
+build/
+
+clara
 parse.c
 parse.h
-
-test*.sh
-
-autom4te.cache/
-.deps/

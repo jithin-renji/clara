@@ -3,12 +3,6 @@
 #include "jobs.h"
 #include "env.h"
 
-#ifdef HAVE_CONFIG_H
-#   include <config.h>
-#else
-#   error "Missing config.h"
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

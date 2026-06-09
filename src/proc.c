@@ -1,8 +1,5 @@
 #include "proc.h"
-
-#ifdef HAVE_CONFIG_H
-#   include <config.h>
-#endif
+#include "config.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -124,7 +121,7 @@ void proc_exec(Proc_t *proc, pid_t pgrp,
 
     execvp(proc->argv->v[0], proc->argv->v);
     if (errno == ENOENT) {
-        fprintf(stderr, PACKAGE_NAME ": %s: command not found\n", proc->argv->v[0]);
+        fprintf(stderr, "clara: %s: command not found\n", proc->argv->v[0]);
     } else {
         perror("execvp");
     }
