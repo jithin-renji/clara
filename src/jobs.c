@@ -8,6 +8,7 @@
 
 #include <unistd.h>
 #include <sys/wait.h>
+#include <signal.h>
 
 Job_t *jobs = NULL;
 static size_t next_job_id = 0;
